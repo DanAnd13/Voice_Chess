@@ -13,33 +13,20 @@ namespace VoiceChess.MoveFigureManager
         public FigureParams[] Figures;
 
         private GameBoard _board;
-        private Player _whitePlayer;
-        private Player _blackPlayer;
-
-        private Pawn _pawn;
-        private Rook _rook;
-        private Knight _knight;
-        private Bishop _bishop;
-        private Queen _queen;
-        private King _king;
+        private bool _moveSuccessful = false;
 
         private void Awake()
         {
             _board = new GameBoard();
-            _whitePlayer = new Player();
-            _blackPlayer = new Player();
         }
 
-        public bool MoveFigure(string figureName, string newPosition)
+        public bool IsMoveAvailable(string figureName, string newPosition)
         {
-            bool moveSuccessful = false;
-
             try
             {
                 // Конвертуємо рядкову позицію `newPosition` у об'єкт Square
                 Square destinationSquare = Square.Parse(newPosition);
 
-                // Шукаємо фігуру за її ім'ям
                 foreach (var figure in Figures)
                 {
                     if (figure.Type.ToString() == figureName)
@@ -54,22 +41,8 @@ namespace VoiceChess.MoveFigureManager
                         if (_board.IsValidMove(move))
                         {
                             // Виконуємо хід
-                            if (_board.MakeMove(move, isMoveValidated: true))
-                            {
-                                // Оновлюємо позицію фігури
-                                figure.PreviousPosition = figure.CurrentPosition;
-                                figure.CurrentPosition = newPosition;
-
-                                Debug.Log($"{figure.Type} moved from {figure.PreviousPosition} to {figure.CurrentPosition}");
-                                moveSuccessful = true;
-                                
-                                PrintBoard();
-                                break;
-                            }
-                            else
-                            {
-                                Debug.Log($"Failed to execute move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.");
-                            }
+                            MakeMove(move, figure, newPosition);
+                            break;
                         }
                         else
                         {
@@ -87,18 +60,37 @@ namespace VoiceChess.MoveFigureManager
                 Debug.LogError($"Unexpected error occurred: {ex.Message}");
             }
 
-            if (!moveSuccessful)
+            if (!_moveSuccessful)
             {
                 Debug.LogError($"No valid moves found for figure {figureName} to position {newPosition}.");
             }
 
-            return moveSuccessful;
+            return _moveSuccessful;
         }
+
+        private void MakeMove(Move move, FigureParams figure, string newPosition)
+        {
+            if (_board.MakeMove(move, isMoveValidated: true))
+            {
+                // Оновлюємо позицію фігури
+                figure.PreviousPosition = figure.CurrentPosition;
+                figure.CurrentPosition = newPosition;
+
+                Debug.Log($"{figure.Type} moved from {figure.PreviousPosition} to {figure.CurrentPosition}");
+                _moveSuccessful = true;
+
+                PrintBoard();
+            }
+            else
+            {
+                Debug.Log($"Failed to execute move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.");
+            }
+        }
+
         private void PrintBoard()
         {
             Debug.Log("Current Board State:");
 
-            // Перебір всіх клітинок дошки 8x8
             for (int rank = 0; rank < 8; rank++)
             {
                 string row = "";
@@ -107,14 +99,14 @@ namespace VoiceChess.MoveFigureManager
                     Piece piece = _board.Board[file, rank];
                     if (piece == null)
                     {
-                        row += "[ ] ";  // Порожня клітинка
+                        row += "[ ] ";
                     }
                     else
                     {
-                        row += $"[{piece}] ";  // Тип фігури в клітинці
+                        row += $"[{piece}] ";
                     }
                 }
-                Debug.Log(row); // Виводимо рядок для поточної лінії
+                Debug.Log(row);
             }
         }
     }

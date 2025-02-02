@@ -3,20 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using VoiceChess.MoveFigureManager;
 
-public class TestMovement : MonoBehaviour
+namespace VoiceChess.Testing
 {
-    public FigureMoveManager mMoveManager;
-    public string FigureName;
-    public string FigurePosition;
-
-    void Start()
+    public class TestMovement : MonoBehaviour
     {
-        mMoveManager.MoveFigure(FigureName, FigurePosition);
-    }
+        public FigureMoveManager mMoveManager;
+        public string FigureName;
+        public string FigurePosition;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        void Start()
+        {
+            mMoveManager.IsMoveAvailable(FigureName, FigurePosition);
+        }
     }
 }

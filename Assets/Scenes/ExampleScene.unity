@@ -3725,7 +3725,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMoveManager: {fileID: 1631946418}
   FigureName: Pawn
-  FigurePosition: G4
+  FigurePosition: C3
 --- !u!1001 &570854668
 PrefabInstance:
   m_ObjectHideFlags: 0
