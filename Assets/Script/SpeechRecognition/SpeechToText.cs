@@ -8,24 +8,24 @@ namespace VoiceChess.SpeechRecognition
 {
     public class SpeechToText : MonoBehaviour
     {
-        [SerializeField] private Button _startButton;
-        [SerializeField] private Button _stopButton;
-        [SerializeField] private TextMeshProUGUI _text;
+        public Button StartButton;
+        public Button StopButton;
+        public TextMeshProUGUI OutputText;
 
         private AudioClip _clip;
         private byte[] _bytes;
-        private bool _recording;
+        private bool _isRecording;
 
-        private void Start()
+        private void Awake()
         {
-            _startButton.onClick.AddListener(StartRecording);
-            _stopButton.onClick.AddListener(StopRecording);
-            _stopButton.interactable = false;
+            StartButton.onClick.AddListener(StartRecording);
+            StopButton.onClick.AddListener(StopRecording);
+            StopButton.interactable = false;
         }
 
         private void Update()
         {
-            if (_recording && Microphone.GetPosition(null) >= _clip.samples)
+            if (_isRecording && Microphone.GetPosition(null) >= _clip.samples)
             {
                 StopRecording();
             }
@@ -33,12 +33,12 @@ namespace VoiceChess.SpeechRecognition
 
         private void StartRecording()
         {
-            _text.color = Color.white;
-            _text.text = "Recording...";
-            _startButton.interactable = false;
-            _stopButton.interactable = true;
+            OutputText.color = Color.white;
+            OutputText.text = "Recording...";
+            StartButton.interactable = false;
+            StopButton.interactable = true;
             _clip = Microphone.Start(null, false, 10, 44100);
-            _recording = true;
+            _isRecording = true;
         }
 
         private void StopRecording()
@@ -48,25 +48,25 @@ namespace VoiceChess.SpeechRecognition
             var samples = new float[position * _clip.channels];
             _clip.GetData(samples, 0);
             _bytes = EncodeAsWAV(samples, _clip.frequency, _clip.channels);
-            _recording = false;
+            _isRecording = false;
             SendRecording();
         }
 
         private void SendRecording()
         {
-            _text.color = Color.yellow;
-            _text.text = "Sending...";
-            _stopButton.interactable = false;
+            OutputText.color = Color.yellow;
+            OutputText.text = "Sending...";
+            StopButton.interactable = false;
             HuggingFaceAPI.AutomaticSpeechRecognition(_bytes, response =>
             {
-                _text.color = Color.white;
-                _text.text = response;
-                _startButton.interactable = true;
+                OutputText.color = Color.white;
+                OutputText.text = response;
+                StartButton.interactable = true;
             }, error =>
             {
-                _text.color = Color.red;
-                _text.text = error;
-                _startButton.interactable = true;
+                OutputText.color = Color.red;
+                OutputText.text = error;
+                StartButton.interactable = true;
             });
         }
 
