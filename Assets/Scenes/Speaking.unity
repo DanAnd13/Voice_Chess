@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a12710814773daa428c3051f5d05e126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputText: Hello my friend
+  InputText: Pawn on C4
 --- !u!1 &469709414
 GameObject:
   m_ObjectHideFlags: 0
