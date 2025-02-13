@@ -56,23 +56,6 @@ namespace VoiceChess.Speaking
             _engine = new Worker(model, BackendType.GPUCompute);
         }
 
-        private void SpeakingByText()
-        {
-            string phonemeText;
-            if (_hasPhonemeDictionary)
-            {
-                phonemeText = TextToPhonemes(InputText);
-                Debug.Log(phonemeText);
-            }
-            else
-            {
-                //If we have no phenome dictionary
-                Debug.Log("Have no phenome dictionary");
-                phonemeText = null;
-            }
-            DoInference(phonemeText);
-        }
-
         private void ReadDictionary()
         {
             if (!_hasPhonemeDictionary) return;
@@ -97,19 +80,21 @@ namespace VoiceChess.Speaking
             //dict.Add("somenewword","[phonemes]");
         }
 
-        private string ExpandNumbers(string text)
+        private void SpeakingByText()
         {
-            return text
-                .Replace("0", " ZERO ")
-                .Replace("1", " ONE ")
-                .Replace("2", " TWO ")
-                .Replace("3", " THREE ")
-                .Replace("4", " FOUR ")
-                .Replace("5", " FIVE ")
-                .Replace("6", " SIX ")
-                .Replace("7", " SEVEN ")
-                .Replace("8", " EIGHT ")
-                .Replace("9", " NINE ");
+            string phonemeText;
+            if (_hasPhonemeDictionary)
+            {
+                phonemeText = TextToPhonemes(InputText);
+                Debug.Log(phonemeText);
+            }
+            else
+            {
+                //If we have no phenome dictionary
+                Debug.Log("Have no phenome dictionary");
+                phonemeText = null;
+            }
+            DoInference(phonemeText);
         }
 
         private string TextToPhonemes(string text)
@@ -152,17 +137,6 @@ namespace VoiceChess.Speaking
             return output;
         }
 
-        private int[] GetTokens(string phonemeText)
-        {
-            string[] words = phonemeText.Split();
-            var tokens = new int[words.Length];
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                tokens[i] = Mathf.Max(0, System.Array.IndexOf(_phonemes, words[i]));
-            }
-            return tokens;
-        }
-
         private void DoInference(string phonemeText)
         {
             int[] tokens = GetTokens(phonemeText);
@@ -183,6 +157,18 @@ namespace VoiceChess.Speaking
 
             Speak();
         }
+
+        private int[] GetTokens(string phonemeText)
+        {
+            string[] words = phonemeText.Split();
+            var tokens = new int[words.Length];
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                tokens[i] = Mathf.Max(0, System.Array.IndexOf(_phonemes, words[i]));
+            }
+            return tokens;
+        }
+
         private void Speak()
         {
             AudioSource audioSource = GetComponent<AudioSource>();
@@ -196,5 +182,20 @@ namespace VoiceChess.Speaking
                 Debug.Log("There is no audio source");
             }
         }
+
+        private string ExpandNumbers(string text)
+        {
+            return text
+                .Replace("0", " ZERO ")
+                .Replace("1", " ONE ")
+                .Replace("2", " TWO ")
+                .Replace("3", " THREE ")
+                .Replace("4", " FOUR ")
+                .Replace("5", " FIVE ")
+                .Replace("6", " SIX ")
+                .Replace("7", " SEVEN ")
+                .Replace("8", " EIGHT ")
+                .Replace("9", " NINE ");
+        }  
     }
 }

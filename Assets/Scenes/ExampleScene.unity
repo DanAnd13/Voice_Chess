@@ -600,7 +600,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000010991507056, guid: c9476b5c23fb4634485fcb52734c04d5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.27
+      value: -0.78
       objectReference: {fileID: 0}
     - target: {fileID: 4000010991507056, guid: c9476b5c23fb4634485fcb52734c04d5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -669,8 +669,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 2
-  CurrentPosition: E1
-  PreviousPosition: E1
+  CurrentPosition: D1
+  PreviousPosition: D1
   TeamColor: 1
 --- !u!1 &75624706
 GameObject:
@@ -1361,7 +1361,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011137980350, guid: 99331e88befbef94bbad253e659776ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.27
+      value: -0.75
       objectReference: {fileID: 0}
     - target: {fileID: 4000011137980350, guid: 99331e88befbef94bbad253e659776ba, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1430,8 +1430,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 2
-  CurrentPosition: E8
-  PreviousPosition: E8
+  CurrentPosition: D8
+  PreviousPosition: D8
   TeamColor: 0
 --- !u!1 &205975978
 GameObject:
@@ -3689,6 +3689,7 @@ GameObject:
   m_Component:
   - component: {fileID: 566576835}
   - component: {fileID: 566576836}
+  - component: {fileID: 566576837}
   m_Layer: 0
   m_Name: Test
   m_TagString: Untagged
@@ -3718,7 +3719,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566576833}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c46db7e6fafeea740b23c6627a6cfb53, type: 3}
   m_Name: 
@@ -3726,6 +3727,19 @@ MonoBehaviour:
   mMoveManager: {fileID: 1631946418}
   FigureName: Pawn
   FigurePosition: C3
+--- !u!114 &566576837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566576833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45198cf7608d4bf478c1d18a448275ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FigureMoveManager: {fileID: 1631946418}
 --- !u!1001 &570854668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9866,7 +9880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011383913036, guid: 1700328aaf96fd243a71d862897619a4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.75
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 4000011383913036, guid: 1700328aaf96fd243a71d862897619a4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9935,8 +9949,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 1
-  CurrentPosition: D8
-  PreviousPosition: D8
+  CurrentPosition: E8
+  PreviousPosition: E8
   TeamColor: 0
 --- !u!1001 &1654243180
 PrefabInstance:
@@ -10167,7 +10181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011301568552, guid: d992acfff4e84c44e97513dc227b06b7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.73
+      value: 0.23
       objectReference: {fileID: 0}
     - target: {fileID: 4000011301568552, guid: d992acfff4e84c44e97513dc227b06b7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10236,8 +10250,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 1
-  CurrentPosition: D1
-  PreviousPosition: D1
+  CurrentPosition: E1
+  PreviousPosition: E1
   TeamColor: 1
 --- !u!1001 &1675094726
 PrefabInstance:

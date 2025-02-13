@@ -20,6 +20,11 @@ namespace VoiceChess.MoveFigureManager
             _board = new GameBoard();
         }
 
+        public GameBoard GetGameBoard()
+        {
+            return _board;
+        }
+
         public bool IsMoveAvailable(string figureName, string newPosition)
         {
             try
@@ -46,7 +51,7 @@ namespace VoiceChess.MoveFigureManager
                         }
                         else
                         {
-                            Debug.Log($"Invalid move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.");
+                           Debug.Log($"Invalid move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.");
                         }
                     }
                 }
@@ -79,7 +84,7 @@ namespace VoiceChess.MoveFigureManager
                 Debug.Log($"{figure.Type} moved from {figure.PreviousPosition} to {figure.CurrentPosition}");
                 _moveSuccessful = true;
 
-                PrintBoard();
+                //PrintBoard();
             }
             else
             {
@@ -87,7 +92,7 @@ namespace VoiceChess.MoveFigureManager
             }
         }
 
-        private void PrintBoard()
+        public void PrintBoard()
         {
             Debug.Log("Current Board State:");
 
