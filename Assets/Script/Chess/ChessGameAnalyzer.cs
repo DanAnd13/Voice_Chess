@@ -22,15 +22,23 @@ namespace VoiceChess.ChessAnalyzer
 
         private void Start()
         {
-            WhiteWinner();
+            BlackInCheck();
+            //Fight();
         }
 
-        private void WhiteWinner()
+        private void BlackInCheck()
         {
             FigureMoveManager.IsMoveAvailable("Pawn", "C4");
             FigureMoveManager.IsMoveAvailable("Pawn", "D5");
             FigureMoveManager.IsMoveAvailable("Queen", "A4");
             UpdateGameState();
+        }
+
+        private void Fight()
+        {
+            FigureMoveManager.IsMoveAvailable("Pawn", "E4");
+            FigureMoveManager.IsMoveAvailable("Pawn", "D5");
+            FigureMoveManager.IsMoveAvailable("Pawn", "D5");
         }
 
         // Метод для оновлення стану гри та відображення результату

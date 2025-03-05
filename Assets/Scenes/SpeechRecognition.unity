@@ -738,9 +738,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86fc9adf26091c64ab68e8ff0859ca22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startButton: {fileID: 1762242485}
-  _stopButton: {fileID: 1130726093}
-  _text: {fileID: 1140236542}
+  StartButton: {fileID: 1762242485}
+  StopButton: {fileID: 1130726093}
+  OutputText: {fileID: 1140236542}
 --- !u!4 &1623426821
 Transform:
   m_ObjectHideFlags: 0

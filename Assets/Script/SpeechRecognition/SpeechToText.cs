@@ -1,8 +1,9 @@
-using System.IO;
+﻿using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using HuggingFace.API;
+using System.Text.RegularExpressions;
 
 namespace VoiceChess.SpeechRecognition
 {
@@ -44,9 +45,12 @@ namespace VoiceChess.SpeechRecognition
         private void StopRecording()
         {
             var position = Microphone.GetPosition(null);
+            if (position <= 0) return;  // Переконатися, що запис відбувся
+
             Microphone.End(null);
             var samples = new float[position * _clip.channels];
             _clip.GetData(samples, 0);
+
             _bytes = EncodeAsWAV(samples, _clip.frequency, _clip.channels);
             _isRecording = false;
             SendRecording();
@@ -55,12 +59,14 @@ namespace VoiceChess.SpeechRecognition
         private void SendRecording()
         {
             OutputText.color = Color.yellow;
-            OutputText.text = "Sending...";
+            OutputText.text = "Processing...";
             StopButton.interactable = false;
+
             HuggingFaceAPI.AutomaticSpeechRecognition(_bytes, response =>
             {
+                var processedText = TextCorrection(response);
                 OutputText.color = Color.white;
-                OutputText.text = response;
+                OutputText.text = processedText;
                 StartButton.interactable = true;
             }, error =>
             {
@@ -98,5 +104,100 @@ namespace VoiceChess.SpeechRecognition
                 return memoryStream.ToArray();
             }
         }
+
+        private string TextCorrection(string text)
+        {
+            Debug.Log($"Raw speech text: '{text}'");
+            text = ReplacementOfMistakes(text);
+            return PatternAnalyzer(text);
+        }
+
+        private string ReplacementOfMistakes(string text)
+        {
+            text = text.ToLower().Trim();
+
+            text = text.Replace("for", "four")
+                       .Replace("to", "two")
+                       .Replace("too", "two")
+                       .Replace("tree", "three")
+                       .Replace("tri", "three")
+                       .Replace("free", "three")
+                       .Replace("one", "1")
+                       .Replace("won", "1")
+                       .Replace("two", "2")
+                       .Replace("three", "3")
+                       .Replace("four", "4")
+                       .Replace("five", "5")
+                       .Replace("six", "6")
+                       .Replace("sick", "6")
+                       .Replace("seven", "7")
+                       .Replace("eight", "8")
+                       .Replace("ate", "8")
+                       .Replace("nine", "9");
+
+            // 🔹 Виправлення розпізнавання літер
+            text = text.Replace("age", "h")
+                       .Replace("hey", "h")
+                       .Replace("see", "c")
+                       .Replace("sea", "c")
+                       .Replace("tea", "t")
+                       .Replace("bee", "b")
+                       .Replace("dee", "d")
+                       .Replace("de", "d")
+                       .Replace("i", "e")
+                       .Replace("eff", "f")
+                       .Replace("gee", "g");
+
+            // 🔹 Виправлення розпізнавання шахових фігур
+            text = text.Replace("bawn", "pawn")
+                       .Replace("bown", "pawn")
+                       .Replace("boun", "pawn")
+                       .Replace("pawnd", "pawn")
+                       .Replace("pound", "pawn")
+                       .Replace("night", "knight")
+                       .Replace("nite", "knight")
+                       .Replace("knite", "knight")
+                       .Replace("brook", "rook")
+                       .Replace("rock", "rook")
+                       .Replace("ruke", "rook")
+                       .Replace("green", "queen")
+                       .Replace("bean", "queen")
+                       .Replace("twin", "queen")
+                       .Replace("kink", "king")
+                       .Replace("game", "king")
+                       .Replace("kim", "king")
+                       .Replace("kem", "king")
+                       .Replace("thing", "king")
+                       .Replace("ying", "king")
+                       .Replace("kimk", "king")
+                       .Replace("b-shop", "bishop")
+                       .Replace("bshop", "bishop")
+                       .Replace("B-shop", "bishop");
+
+            return text;
+        }
+
+        private string PatternAnalyzer(string text)
+        {
+            Debug.Log($"Processed text: '{text}'");
+
+            string pattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+
+            var match = Regex.Match(text, pattern, RegexOptions.IgnoreCase);
+
+            if (match.Success)
+            {
+                string piece = match.Groups[1].Value;
+                string column = match.Groups[2].Value;
+                string row = match.Groups[3].Value;
+
+                Debug.Log($"Detected move: {piece} {column}{row}");
+                return $"Detected Move: {piece} {column}{row}";
+            }
+
+            Debug.LogError($"Regex failed on input: '{text}'");
+            return "Unrecognized command. Try again.";
+        }
+
     }
 }
