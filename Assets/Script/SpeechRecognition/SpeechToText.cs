@@ -181,23 +181,55 @@ namespace VoiceChess.SpeechRecognition
         {
             Debug.Log($"Processed text: '{text}'");
 
-            string pattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+            string figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+            string figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+            string positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
 
-            var match = Regex.Match(text, pattern, RegexOptions.IgnoreCase);
+            Match match;
 
+            // Шаблон "фігура → позиція → позиція"
+            match = Regex.Match(text, figurePositionPositionPattern, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                string piece = match.Groups[1].Value;
+                string startColumn = match.Groups[2].Value;
+                string startRow = match.Groups[3].Value;
+                string targetColumn = match.Groups[4].Value;
+                string targetRow = match.Groups[5].Value;
+
+                Debug.Log($"Detected move: {piece} from {startColumn}{startRow} to {targetColumn}{targetRow}");
+                return $"Detected Move: {piece} from {startColumn}{startRow} to {targetColumn}{targetRow}";
+            }
+
+            // Шаблон "позиція → позиція"
+            match = Regex.Match(text, positionPositionPattern, RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                string startColumn = match.Groups[1].Value;
+                string startRow = match.Groups[2].Value;
+                string targetColumn = match.Groups[3].Value;
+                string targetRow = match.Groups[4].Value;
+
+                Debug.Log($"Detected move: from {startColumn}{startRow} to {targetColumn}{targetRow}");
+                return $"Detected Move: from {startColumn}{startRow} to {targetColumn}{targetRow}";
+            }
+
+            // Шаблон "фігура → позиція"
+            match = Regex.Match(text, figurePositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 string piece = match.Groups[1].Value;
                 string column = match.Groups[2].Value;
                 string row = match.Groups[3].Value;
 
-                Debug.Log($"Detected move: {piece} {column}{row}");
-                return $"Detected Move: {piece} {column}{row}";
+                Debug.Log($"Detected move: {piece} to {column}{row}");
+                return $"Detected Move: {piece} to {column}{row}";
             }
 
             Debug.LogError($"Regex failed on input: '{text}'");
             return "Unrecognized command. Try again.";
         }
+
 
     }
 }

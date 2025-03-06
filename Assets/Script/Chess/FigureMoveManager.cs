@@ -1,10 +1,11 @@
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
 using UnityEngine;
 using ChessSharp;
 using VoiceChess.FigureParameters;
 using ChessSharp.Pieces;
 using ChessSharp.SquareData;
 using System;
+using System.Linq;
 
 namespace VoiceChess.MoveFigureManager
 {
@@ -25,33 +26,34 @@ namespace VoiceChess.MoveFigureManager
             return _board;
         }
 
-        public bool IsMoveAvailable(string figureName, string newPosition)
+        public bool IsMoveAvailable(string? figureName, string? currentPosition, string newPosition)
         {
+            _moveSuccessful = false;
+
             try
             {
-                // Конвертуємо рядкову позицію `newPosition` у об'єкт Square
                 Square destinationSquare = Square.Parse(newPosition);
 
                 foreach (var figure in Figures)
                 {
-                    if (figure.Type.ToString() == figureName)
+                    if ((figureName != null && currentPosition == null) || (figureName != null && currentPosition != null))
                     {
-                        // Конвертуємо поточну позицію фігури в Square
-                        Square currentSquare = Square.Parse(figure.CurrentPosition);
-
-                        // Створюємо об'єкт Move
-                        Move move = new Move(currentSquare, destinationSquare, _board.WhoseTurn());
-
-                        // Перевіряємо валідність ходу
-                        if (_board.IsValidMove(move))
+                        if (figure.Type.ToString() == figureName)
                         {
-                            // Виконуємо хід
-                            MakeMove(move, figure, newPosition);
-                            break;
+                            if (CreateMoveAtributes(destinationSquare, figure, newPosition))
+                            {
+                                return true;
+                            }
                         }
-                        else
+                    }
+                    else if (figureName == null && currentPosition != null)
+                    {
+                        if (figure.CurrentPosition == currentPosition)
                         {
-                           //Debug.Log($"Invalid move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.");
+                            if (CreateMoveAtributes(destinationSquare, figure, newPosition))
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -65,24 +67,34 @@ namespace VoiceChess.MoveFigureManager
                 Debug.LogError($"Unexpected error occurred: {ex.Message}");
             }
 
-            if (!_moveSuccessful)
-            {
-                Debug.LogError($"No valid moves found for figure {figureName} to position {newPosition}.");
-            }
-
             return _moveSuccessful;
         }
+
+        private bool CreateMoveAtributes(Square destinationSquare, FigureParams figure, string newPosition)
+        {
+            Square currentSquare = Square.Parse(figure.CurrentPosition);
+
+            Move move = new Move(currentSquare, destinationSquare, _board.WhoseTurn());
+
+            if (_board.IsValidMove(move))
+            {
+                MakeMove(move, figure, newPosition);
+                _moveSuccessful = true;
+                return true;
+            }
+            return false;
+        }
+
 
         private void MakeMove(Move move, FigureParams figure, string newPosition)
         {
             if (_board.MakeMove(move, isMoveValidated: true))
             {
-                // Оновлюємо позицію фігури
+                // РћРЅРѕРІР»СЋС”РјРѕ РїРѕР·РёС†С–СЋ С„С–РіСѓСЂРё
                 figure.PreviousPosition = figure.CurrentPosition;
                 figure.CurrentPosition = newPosition;
 
                 Debug.Log($"{figure.Type} moved from {figure.PreviousPosition} to {figure.CurrentPosition}");
-                _moveSuccessful = true;
 
                 PrintBoard();
             }

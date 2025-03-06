@@ -28,17 +28,17 @@ namespace VoiceChess.ChessAnalyzer
 
         private void BlackInCheck()
         {
-            FigureMoveManager.IsMoveAvailable("Pawn", "C4");
-            FigureMoveManager.IsMoveAvailable("Pawn", "D5");
-            FigureMoveManager.IsMoveAvailable("Queen", "A4");
+            FigureMoveManager.IsMoveAvailable("Pawn",null, "C4");
+            FigureMoveManager.IsMoveAvailable("Pawn", null, "D5");
+            FigureMoveManager.IsMoveAvailable("Queen", null, "A4");
             UpdateGameState();
         }
 
         private void Fight()
         {
-            FigureMoveManager.IsMoveAvailable("Pawn", "E4");
-            FigureMoveManager.IsMoveAvailable("Pawn", "D5");
-            FigureMoveManager.IsMoveAvailable("Pawn", "D5");
+            FigureMoveManager.IsMoveAvailable("Pawn", null, "E4");
+            FigureMoveManager.IsMoveAvailable("Pawn", null, "D5");
+            FigureMoveManager.IsMoveAvailable("Pawn", null, "D5");
         }
 
         // Метод для оновлення стану гри та відображення результату

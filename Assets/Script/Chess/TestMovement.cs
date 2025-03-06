@@ -8,12 +8,13 @@ namespace VoiceChess.Testing
     public class TestMovement : MonoBehaviour
     {
         public FigureMoveManager mMoveManager;
-        public string FigureName;
-        public string FigurePosition;
+        public string? FigureName;
+        public string? CurrentFigurePosition;
+        public string NewFigurePosition;
 
         void Start()
         {
-            mMoveManager.IsMoveAvailable(FigureName, FigurePosition);
+            mMoveManager.IsMoveAvailable(null, CurrentFigurePosition, NewFigurePosition);
         }
     }
 }
