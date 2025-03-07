@@ -42,6 +42,9 @@ namespace VoiceChess.Speaking
         private void Awake()
         {
             PlayButton.onClick.AddListener(PlayText);
+
+            LoadModel();
+            ReadDictionary();
         }
 
         private void OnDestroy()
@@ -54,8 +57,6 @@ namespace VoiceChess.Speaking
             stopwatch.Reset();
             stopwatch.Start();
 
-            LoadModel();
-            ReadDictionary();
             SpeakingByText();
 
             stopwatch.Stop();
