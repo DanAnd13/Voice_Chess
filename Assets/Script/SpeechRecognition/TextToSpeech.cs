@@ -2,12 +2,19 @@ using UnityEngine;
 using Unity.Sentis;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
+using TMPro;
+using UnityEngine.UI;
+using UnityEngine.Profiling;
 
 namespace VoiceChess.Speaking
 {
     public class TextToSpeech : MonoBehaviour
     {
-        public string InputText = "Once upon a time, there lived a girl called Alice. She lived in a house in the woods.";
+        public TMP_InputField InputText;
+        public Button PlayButton;
+
+        //public string InputText = "Once upon a time, there lived a girl called Alice. She lived in a house in the woods.";
 
         //Set to true if we have put the phoneme_dict.txt in the Assets/StreamingAssets folder
         private bool _hasPhonemeDictionary = true;
@@ -17,6 +24,8 @@ namespace VoiceChess.Speaking
         private Worker _engine;
 
         private AudioClip _clip;
+
+        private Stopwatch stopwatch = new Stopwatch();
 
         private readonly string[] _phonemes = new string[] {
         "<blank>", "<unk>", "AH0", "N", "T", "D", "S", "R", "L", "DH", "K", "Z", "IH1",
@@ -30,19 +39,9 @@ namespace VoiceChess.Speaking
         //Can change pitch and speed with this for a slightly different voice:
         const int Constant_Samplerate = 22050;
 
-        void Start()
+        private void Awake()
         {
-            LoadModel();
-            ReadDictionary();
-            SpeakingByText();
-        }
-
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                SpeakingByText();
-            }
+            PlayButton.onClick.AddListener(PlayText);
         }
 
         private void OnDestroy()
@@ -50,34 +49,47 @@ namespace VoiceChess.Speaking
             _engine?.Dispose();
         }
 
+        private void PlayText()
+        {
+            stopwatch.Reset();
+            stopwatch.Start();
+
+            LoadModel();
+            ReadDictionary();
+            SpeakingByText();
+
+            stopwatch.Stop();
+            UnityEngine.Debug.Log($"Total initialization time: {stopwatch.ElapsedMilliseconds} ms");
+        }
+
         private void LoadModel()
         {
+            Profiler.BeginSample("Load Sentis Model");
             var model = ModelLoader.Load(Path.Join(Application.streamingAssetsPath, "jets-text-to-speech.sentis"));
             _engine = new Worker(model, BackendType.GPUCompute);
+            Profiler.EndSample();
         }
 
         private void ReadDictionary()
         {
-            if (!_hasPhonemeDictionary) return;
+            if (!_hasPhonemeDictionary || _dictionary.Count > 0) return; // якщо вже ≥н≥ц≥ал≥зовано, пропускаЇмо
+
             string[] wordsFromPhonemeDictionary = File.ReadAllLines(Path.Join(Application.streamingAssetsPath, "phoneme_dict.txt"));
-            for (int i = 0; i < wordsFromPhonemeDictionary.Length; i++)
+            foreach (string s in wordsFromPhonemeDictionary)
             {
-                string s = wordsFromPhonemeDictionary[i];
                 string[] parts = s.Split();
-                if (parts[0] != ";;;") //ignore comments in file
+                if (parts[0] != ";;;")
                 {
                     string key = parts[0];
-                    _dictionary.Add(key, s.Substring(key.Length + 2));
+                    _dictionary.TryAdd(key, s.Substring(key.Length + 2));
                 }
             }
-            // Add codes for punctuation to the dictionary
-            _dictionary.Add(",", ",");
-            _dictionary.Add(".", ".");
-            _dictionary.Add("!", "!");
-            _dictionary.Add("?", "?");
-            _dictionary.Add("\"", "\"");
-            // You could add extra word pronounciations here e.g.
-            //dict.Add("somenewword","[phonemes]");
+
+            _dictionary.TryAdd(",", ",");
+            _dictionary.TryAdd(".", ".");
+            _dictionary.TryAdd("!", "!");
+            _dictionary.TryAdd("?", "?");
+            _dictionary.TryAdd("\"", "\"");
         }
 
         private void SpeakingByText()
@@ -85,13 +97,13 @@ namespace VoiceChess.Speaking
             string phonemeText;
             if (_hasPhonemeDictionary)
             {
-                phonemeText = TextToPhonemes(InputText);
-                Debug.Log(phonemeText);
+                phonemeText = TextToPhonemes(InputText.text);
+                UnityEngine.Debug.Log(phonemeText);
             }
             else
             {
                 //If we have no phenome dictionary
-                Debug.Log("Have no phenome dictionary");
+                UnityEngine.Debug.Log("Have no phenome dictionary");
                 phonemeText = null;
             }
             DoInference(phonemeText);
@@ -150,7 +162,7 @@ namespace VoiceChess.Speaking
 
             var samples = output.DownloadToArray();
 
-            Debug.Log($"Audio size = {samples.Length / Constant_Samplerate} seconds");
+            UnityEngine.Debug.Log($"Audio size = {samples.Length / Constant_Samplerate} seconds");
 
             _clip = AudioClip.Create("voice audio", samples.Length, 1, Constant_Samplerate, false);
             _clip.SetData(samples, 0);
@@ -179,7 +191,7 @@ namespace VoiceChess.Speaking
             }
             else
             {
-                Debug.Log("There is no audio source");
+                UnityEngine.Debug.Log("There is no audio source");
             }
         }
 
