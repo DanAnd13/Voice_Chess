@@ -3,46 +3,36 @@ using Unity.Sentis;
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
-using TMPro;
-using UnityEngine.UI;
 using UnityEngine.Profiling;
 
 namespace VoiceChess.Speaking
 {
     public class TextToSpeech : MonoBehaviour
     {
-        public TMP_InputField InputText;
-        public Button PlayButton;
+        // «м≥нна дл€ отриманн€ тексту з Editor Script
+        private string inputText = "Default text.";
 
-        //public string InputText = "Once upon a time, there lived a girl called Alice. She lived in a house in the woods.";
-
-        //Set to true if we have put the phoneme_dict.txt in the Assets/StreamingAssets folder
         private bool _hasPhonemeDictionary = true;
-
         private Dictionary<string, string> _dictionary = new();
-
         private Worker _engine;
-
         private AudioClip _clip;
-
         private Stopwatch stopwatch = new Stopwatch();
 
-        private readonly string[] _phonemes = new string[] {
-        "<blank>", "<unk>", "AH0", "N", "T", "D", "S", "R", "L", "DH", "K", "Z", "IH1",
-        "IH0", "M", "EH1", "W", "P", "AE1", "AH1", "V", "ER0", "F", ",", "AA1", "B",
-        "HH", "IY1", "UW1", "IY0", "AO1", "EY1", "AY1", ".", "OW1", "SH", "NG", "G",
-        "ER1", "CH", "JH", "Y", "AW1", "TH", "UH1", "EH2", "OW0", "EY2", "AO0", "IH2",
-        "AE2", "AY2", "AA2", "UW0", "EH0", "OY1", "EY0", "AO2", "ZH", "OW2", "AE0", "UW2",
-        "AH2", "AY0", "IY2", "AW2", "AA0", "\"", "ER2", "UH2", "?", "OY2", "!", "AW0",
-        "UH0", "OY0", "..", "<sos/eos>" };
+        private readonly string[] _phonemes = new string[]
+        {
+            "<blank>", "<unk>", "AH0", "N", "T", "D", "S", "R", "L", "DH", "K", "Z", "IH1",
+            "IH0", "M", "EH1", "W", "P", "AE1", "AH1", "V", "ER0", "F", ",", "AA1", "B",
+            "HH", "IY1", "UW1", "IY0", "AO1", "EY1", "AY1", ".", "OW1", "SH", "NG", "G",
+            "ER1", "CH", "JH", "Y", "AW1", "TH", "UH1", "EH2", "OW0", "EY2", "AO0", "IH2",
+            "AE2", "AY2", "AA2", "UW0", "EH0", "OY1", "EY0", "AO2", "ZH", "OW2", "AE0", "UW2",
+            "AH2", "AY0", "IY2", "AW2", "AA0", "\"", "ER2", "UH2", "?", "OY2", "!", "AW0",
+            "UH0", "OY0", "..", "<sos/eos>"
+        };
 
-        //Can change pitch and speed with this for a slightly different voice:
         const int Constant_Samplerate = 22050;
 
         private void Awake()
         {
-            PlayButton.onClick.AddListener(PlayText);
-
             LoadModel();
             ReadDictionary();
         }
@@ -50,6 +40,12 @@ namespace VoiceChess.Speaking
         private void OnDestroy()
         {
             _engine?.Dispose();
+        }
+
+        public void SetTextAndSpeak(string text)
+        {
+            inputText = text;
+            PlayText();
         }
 
         private void PlayText()
@@ -73,7 +69,7 @@ namespace VoiceChess.Speaking
 
         private void ReadDictionary()
         {
-            if (!_hasPhonemeDictionary || _dictionary.Count > 0) return; // якщо вже ≥н≥ц≥ал≥зовано, пропускаЇмо
+            if (!_hasPhonemeDictionary || _dictionary.Count > 0) return;
 
             string[] wordsFromPhonemeDictionary = File.ReadAllLines(Path.Join(Application.streamingAssetsPath, "phoneme_dict.txt"));
             foreach (string s in wordsFromPhonemeDictionary)
@@ -98,13 +94,12 @@ namespace VoiceChess.Speaking
             string phonemeText;
             if (_hasPhonemeDictionary)
             {
-                phonemeText = TextToPhonemes(InputText.text);
+                phonemeText = TextToPhonemes(inputText);
                 UnityEngine.Debug.Log(phonemeText);
             }
             else
             {
-                //If we have no phenome dictionary
-                UnityEngine.Debug.Log("Have no phenome dictionary");
+                UnityEngine.Debug.Log("Have no phoneme dictionary");
                 phonemeText = null;
             }
             DoInference(phonemeText);
@@ -123,17 +118,13 @@ namespace VoiceChess.Speaking
             return outputText;
         }
 
-        //Decode the word into phenomes by looking for the longest word in the dictionary that matches
-        //the first part of the word and so on. 
-        //This works fairly well but could be improved. The original paper had a model that
-        //dealt with guessing the phonemes of words
         private string DecodeWord(string word)
         {
             string output = "";
             int start = 0;
             for (int end = word.Length; end >= 0 && start < word.Length; end--)
             {
-                if (end <= start) //no matches
+                if (end <= start)
                 {
                     start++;
                     end = word.Length + 1;
@@ -153,14 +144,10 @@ namespace VoiceChess.Speaking
         private void DoInference(string phonemeText)
         {
             int[] tokens = GetTokens(phonemeText);
-
             using var input = new Tensor<int>(new TensorShape(tokens.Length), tokens);
-
             _engine.Schedule(input);
 
-
             var output = _engine.PeekOutput("wav") as Tensor<float>;
-
             var samples = output.DownloadToArray();
 
             UnityEngine.Debug.Log($"Audio size = {samples.Length / Constant_Samplerate} seconds");
@@ -209,6 +196,6 @@ namespace VoiceChess.Speaking
                 .Replace("7", " SEVEN ")
                 .Replace("8", " EIGHT ")
                 .Replace("9", " NINE ");
-        }  
+        }
     }
 }

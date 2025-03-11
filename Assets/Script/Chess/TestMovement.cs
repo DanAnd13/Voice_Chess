@@ -14,7 +14,7 @@ namespace VoiceChess.Testing
 
         void Start()
         {
-            mMoveManager.IsMoveAvailable(null, CurrentFigurePosition, NewFigurePosition);
+            mMoveManager.IsMoveAvailable(FigureName, CurrentFigurePosition, NewFigurePosition);
         }
     }
 }

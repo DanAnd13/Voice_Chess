@@ -32,28 +32,25 @@ namespace VoiceChess.MoveFigureManager
 
             try
             {
+                if (string.IsNullOrWhiteSpace(newPosition))
+                {
+                    Debug.LogError("Error: New position is empty or null.");
+                    return false;
+                }
+
                 Square destinationSquare = Square.Parse(newPosition);
 
                 foreach (var figure in Figures)
                 {
-                    if ((figureName != null && currentPosition == null) || (figureName != null && currentPosition != null))
+                    bool matchByName = !string.IsNullOrWhiteSpace(figureName) && figure.Type.ToString() == figureName;
+                    bool matchByPosition = !string.IsNullOrWhiteSpace(currentPosition) && figure.CurrentPosition == currentPosition;
+
+                    if (matchByName || matchByPosition)
                     {
-                        if (figure.Type.ToString() == figureName)
+                        if (CreateMoveAtributes(destinationSquare, figure, newPosition))
                         {
-                            if (CreateMoveAtributes(destinationSquare, figure, newPosition))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    else if (figureName == null && currentPosition != null)
-                    {
-                        if (figure.CurrentPosition == currentPosition)
-                        {
-                            if (CreateMoveAtributes(destinationSquare, figure, newPosition))
-                            {
-                                return true;
-                            }
+                            //Debug.Log($"Move successful: {figure.Type} from {figure.CurrentPosition} to {newPosition}");
+                            return true;
                         }
                     }
                 }
@@ -69,6 +66,7 @@ namespace VoiceChess.MoveFigureManager
 
             return _moveSuccessful;
         }
+
 
         private bool CreateMoveAtributes(Square destinationSquare, FigureParams figure, string newPosition)
         {
