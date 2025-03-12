@@ -15,15 +15,29 @@ namespace VoiceChess.MoveFigureManager
 
         private GameBoard _board;
         private bool _moveSuccessful = false;
+        private string _lastMoveResult = "";
 
         private void Awake()
         {
             _board = new GameBoard();
         }
 
-        public GameBoard GetGameBoard()
+        public string GetLastMoveResult()
+        {
+            return _lastMoveResult;
+        }
+
+        private GameBoard GetGameBoard()
         {
             return _board;
+        }
+        public string UpdateGameState()
+        {
+            string currentGameState;
+            _board = GetGameBoard();
+            GameState currentState = _board.GameState;
+            currentGameState = currentState.ToString();
+            return currentGameState;
         }
 
         public bool IsMoveAvailable(string? figureName, string? currentPosition, string newPosition)
@@ -67,7 +81,6 @@ namespace VoiceChess.MoveFigureManager
             return _moveSuccessful;
         }
 
-
         private bool CreateMoveAtributes(Square destinationSquare, FigureParams figure, string newPosition)
         {
             Square currentSquare = Square.Parse(figure.CurrentPosition);
@@ -83,7 +96,6 @@ namespace VoiceChess.MoveFigureManager
             return false;
         }
 
-
         private void MakeMove(Move move, FigureParams figure, string newPosition)
         {
             if (_board.MakeMove(move, isMoveValidated: true))
@@ -92,36 +104,11 @@ namespace VoiceChess.MoveFigureManager
                 figure.PreviousPosition = figure.CurrentPosition;
                 figure.CurrentPosition = newPosition;
 
-                Debug.Log($"{figure.Type} moved from {figure.PreviousPosition} to {figure.CurrentPosition}");
-
-                PrintBoard();
+                _lastMoveResult = $"{figure.Type} moved from {figure.PreviousPosition} to {figure.CurrentPosition}";
             }
             else
             {
-                Debug.Log($"Failed to execute move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.");
-            }
-        }
-
-        public void PrintBoard()
-        {
-            Debug.Log("Current Board State:");
-
-            for (int rank = 0; rank < 8; rank++)
-            {
-                string row = "";
-                for (int file = 0; file < 8; file++)
-                {
-                    Piece piece = _board.Board[file, rank];
-                    if (piece == null)
-                    {
-                        row += "[ ] ";
-                    }
-                    else
-                    {
-                        row += $"[{piece}] ";
-                    }
-                }
-                Debug.Log(row);
+                _lastMoveResult = $"Failed to execute move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.";
             }
         }
     }

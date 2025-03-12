@@ -1,7 +1,5 @@
 ﻿using System.IO;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using HuggingFace.API;
 using System.Text.RegularExpressions;
 
@@ -9,20 +7,11 @@ namespace VoiceChess.SpeechRecognition
 {
     public class SpeechToText : MonoBehaviour
     {
-        public Button StartButton;
-        public Button StopButton;
-        public TextMeshProUGUI OutputText;
-
         private AudioClip _clip;
         private byte[] _bytes;
         private bool _isRecording;
 
-        private void Awake()
-        {
-            StartButton.onClick.AddListener(StartRecording);
-            StopButton.onClick.AddListener(StopRecording);
-            StopButton.interactable = false;
-        }
+        public string RecognizedText { get; private set; } = ""; // 🔹 Додаємо змінну для тексту
 
         private void Update()
         {
@@ -32,20 +21,16 @@ namespace VoiceChess.SpeechRecognition
             }
         }
 
-        private void StartRecording()
+        public void StartRecording()
         {
-            OutputText.color = Color.white;
-            OutputText.text = "Recording...";
-            StartButton.interactable = false;
-            StopButton.interactable = true;
             _clip = Microphone.Start(null, false, 10, 44100);
             _isRecording = true;
         }
 
-        private void StopRecording()
+        public void StopRecording()
         {
             var position = Microphone.GetPosition(null);
-            if (position <= 0) return;  // Переконатися, що запис відбувся
+            if (position <= 0) return;
 
             Microphone.End(null);
             var samples = new float[position * _clip.channels];
@@ -58,21 +43,12 @@ namespace VoiceChess.SpeechRecognition
 
         private void SendRecording()
         {
-            OutputText.color = Color.yellow;
-            OutputText.text = "Processing...";
-            StopButton.interactable = false;
-
             HuggingFaceAPI.AutomaticSpeechRecognition(_bytes, response =>
             {
-                var processedText = TextCorrection(response);
-                OutputText.color = Color.white;
-                OutputText.text = processedText;
-                StartButton.interactable = true;
+                RecognizedText = TextCorrection(response); // 🔹 Оновлюємо RecognizedText
             }, error =>
             {
-                OutputText.color = Color.red;
-                OutputText.text = error;
-                StartButton.interactable = true;
+                RecognizedText = "Error: " + error;
             });
         }
 
@@ -107,129 +83,85 @@ namespace VoiceChess.SpeechRecognition
 
         private string TextCorrection(string text)
         {
-            Debug.Log($"Raw speech text: '{text}'");
+            //Debug.Log($"Raw speech text: '{text}'");
             text = ReplacementOfMistakes(text);
             return PatternAnalyzer(text);
         }
 
         private string ReplacementOfMistakes(string text)
         {
-            text = text.ToLower().Trim();
-
-            text = text.Replace("for", "four")
-                       .Replace("to", "two")
-                       .Replace("too", "two")
-                       .Replace("tree", "three")
-                       .Replace("tri", "three")
-                       .Replace("free", "three")
-                       .Replace("one", "1")
-                       .Replace("won", "1")
-                       .Replace("two", "2")
-                       .Replace("three", "3")
-                       .Replace("four", "4")
-                       .Replace("five", "5")
-                       .Replace("six", "6")
-                       .Replace("sick", "6")
-                       .Replace("seven", "7")
-                       .Replace("eight", "8")
-                       .Replace("ate", "8")
-                       .Replace("nine", "9");
-
-            // 🔹 Виправлення розпізнавання літер
-            text = text.Replace("age", "h")
-                       .Replace("hey", "h")
-                       .Replace("see", "c")
-                       .Replace("sea", "c")
-                       .Replace("tea", "t")
-                       .Replace("bee", "b")
-                       .Replace("dee", "d")
-                       .Replace("de", "d")
-                       .Replace("i", "e")
-                       .Replace("eff", "f")
-                       .Replace("gee", "g");
-
-            // 🔹 Виправлення розпізнавання шахових фігур
-            text = text.Replace("bawn", "pawn")
-                       .Replace("bown", "pawn")
-                       .Replace("boun", "pawn")
-                       .Replace("pawnd", "pawn")
-                       .Replace("pound", "pawn")
-                       .Replace("night", "knight")
-                       .Replace("nite", "knight")
-                       .Replace("knite", "knight")
-                       .Replace("brook", "rook")
-                       .Replace("rock", "rook")
-                       .Replace("ruke", "rook")
-                       .Replace("green", "queen")
-                       .Replace("bean", "queen")
-                       .Replace("twin", "queen")
-                       .Replace("kink", "king")
-                       .Replace("game", "king")
-                       .Replace("kim", "king")
-                       .Replace("kem", "king")
-                       .Replace("thing", "king")
-                       .Replace("ying", "king")
-                       .Replace("kimk", "king")
-                       .Replace("b-shop", "bishop")
-                       .Replace("bshop", "bishop")
-                       .Replace("B-shop", "bishop");
-
-            return text;
+            return text.ToLower().Trim()
+                .Replace("for", "four")
+                .Replace("to", "two")
+                .Replace("too", "two")
+                .Replace("tree", "three")
+                .Replace("tri", "three")
+                .Replace("free", "three")
+                .Replace("fire", "five")
+                .Replace("one", "1")
+                .Replace("won", "1")
+                .Replace("two", "2")
+                .Replace("three", "3")
+                .Replace("four", "4")
+                .Replace("five", "5")
+                .Replace("six", "6")
+                .Replace("sick", "6")
+                .Replace("seven", "7")
+                .Replace("eight", "8")
+                .Replace("ate", "8")
+                .Replace("nine", "9")
+                .Replace("bawn", "pawn")
+                .Replace("bown", "pawn")
+                .Replace("boun", "pawn")
+                .Replace("pawnd", "pawn")
+                .Replace("pound", "pawn")
+                .Replace("night", "knight")
+                .Replace("nite", "knight")
+                .Replace("knite", "knight")
+                .Replace("brook", "rook")
+                .Replace("rock", "rook")
+                .Replace("ruke", "rook")
+                .Replace("green", "queen")
+                .Replace("bean", "queen")
+                .Replace("twin", "queen")
+                .Replace("in", "king")
+                .Replace("himg", "king")
+                .Replace("kink", "king")
+                .Replace("game", "king")
+                .Replace("kim", "king")
+                .Replace("thing", "king")
+                .Replace("b-shop", "bishop")
+                .Replace("bshop", "bishop");
         }
 
         private string PatternAnalyzer(string text)
         {
-            Debug.Log($"Processed text: '{text}'");
-
+            //Debug.Log($"Processed text: '{text}'");
             string figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
             string figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
             string positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
 
             Match match;
 
-            // Шаблон "фігура → позиція → позиція"
             match = Regex.Match(text, figurePositionPositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                string piece = match.Groups[1].Value;
-                string startColumn = match.Groups[2].Value;
-                string startRow = match.Groups[3].Value;
-                string targetColumn = match.Groups[4].Value;
-                string targetRow = match.Groups[5].Value;
-
-                Debug.Log($"Detected move: {piece} from {startColumn}{startRow} to {targetColumn}{targetRow}");
-                return $"Detected Move: {piece} from {startColumn}{startRow} to {targetColumn}{targetRow}";
+                return $"Detected Move: {match.Groups[1].Value} from {match.Groups[2].Value}{match.Groups[3].Value} to {match.Groups[4].Value}{match.Groups[5].Value}";
             }
 
-            // Шаблон "позиція → позиція"
             match = Regex.Match(text, positionPositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                string startColumn = match.Groups[1].Value;
-                string startRow = match.Groups[2].Value;
-                string targetColumn = match.Groups[3].Value;
-                string targetRow = match.Groups[4].Value;
-
-                Debug.Log($"Detected move: from {startColumn}{startRow} to {targetColumn}{targetRow}");
-                return $"Detected Move: from {startColumn}{startRow} to {targetColumn}{targetRow}";
+                return $"Detected Move: from {match.Groups[1].Value}{match.Groups[2].Value} to {match.Groups[3].Value}{match.Groups[4].Value}";
             }
 
-            // Шаблон "фігура → позиція"
             match = Regex.Match(text, figurePositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                string piece = match.Groups[1].Value;
-                string column = match.Groups[2].Value;
-                string row = match.Groups[3].Value;
-
-                Debug.Log($"Detected move: {piece} to {column}{row}");
-                return $"Detected Move: {piece} to {column}{row}";
+                return $"Detected Move: {match.Groups[1].Value} to {match.Groups[2].Value}{match.Groups[3].Value}";
             }
 
-            Debug.LogError($"Regex failed on input: '{text}'");
             return "Unrecognized command. Try again.";
         }
-
-
     }
 }
