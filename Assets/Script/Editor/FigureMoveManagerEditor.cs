@@ -5,14 +5,38 @@ using VoiceChess.MoveFigureManager;
 [CustomEditor(typeof(FigureMoveManager))]
 public class FigureMoveManagerEditor : Editor
 {
+    private static EditorConfig editorConfig;
     private string _figureName = "";       
     private string _currentPosition = "";   
     private string _newPosition = "";       
     private string _moveResult = "";        
     private string _currentGameState = "";
 
+    private void OnEnable()
+    {
+        if (editorConfig == null)
+        {
+            editorConfig = Resources.Load<EditorConfig>("EditorConfig");
+        }
+    }
+
     public override void OnInspectorGUI()
     {
+        if (editorConfig == null)
+        {
+            EditorGUILayout.HelpBox("EditorConfig not found! Create it in Resources folder.", MessageType.Error);
+            return;
+        }
+
+        // Додаємо кнопку для зміни стану
+        editorConfig.enableEditorScript = EditorGUILayout.Toggle("Enable Editor Script", editorConfig.enableEditorScript);
+
+        if (!editorConfig.enableEditorScript)
+        {
+            EditorGUILayout.HelpBox("Editor Script is disabled", MessageType.Warning);
+            return;
+        }
+
         FigureMoveManager moveManager = (FigureMoveManager)target;
 
         serializedObject.Update();

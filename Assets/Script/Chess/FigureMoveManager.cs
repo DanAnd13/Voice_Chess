@@ -13,13 +13,15 @@ namespace VoiceChess.MoveFigureManager
     {
         public FigureParams[] Figures;
 
-        private GameBoard _board;
+        [HideInInspector]
+        public GameBoard Board;
+
         private bool _moveSuccessful = false;
         private string _lastMoveResult = "";
 
         private void Awake()
         {
-            _board = new GameBoard();
+            Board = new GameBoard();
         }
 
         public string GetLastMoveResult()
@@ -29,13 +31,13 @@ namespace VoiceChess.MoveFigureManager
 
         private GameBoard GetGameBoard()
         {
-            return _board;
+            return Board;
         }
         public string UpdateGameState()
         {
             string currentGameState;
-            _board = GetGameBoard();
-            GameState currentState = _board.GameState;
+            Board = GetGameBoard();
+            GameState currentState = Board.GameState;
             currentGameState = currentState.ToString();
             return currentGameState;
         }
@@ -85,9 +87,9 @@ namespace VoiceChess.MoveFigureManager
         {
             Square currentSquare = Square.Parse(figure.CurrentPosition);
 
-            Move move = new Move(currentSquare, destinationSquare, _board.WhoseTurn());
+            Move move = new Move(currentSquare, destinationSquare, Board.WhoseTurn());
 
-            if (_board.IsValidMove(move))
+            if (Board.IsValidMove(move))
             {
                 MakeMove(move, figure, newPosition);
                 _moveSuccessful = true;
@@ -98,7 +100,7 @@ namespace VoiceChess.MoveFigureManager
 
         private void MakeMove(Move move, FigureParams figure, string newPosition)
         {
-            if (_board.MakeMove(move, isMoveValidated: true))
+            if (Board.MakeMove(move, isMoveValidated: true))
             {
                 // Оновлюємо позицію фігури
                 figure.PreviousPosition = figure.CurrentPosition;
