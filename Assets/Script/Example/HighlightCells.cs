@@ -1,4 +1,4 @@
-using ChessSharp;
+п»їusing ChessSharp;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -35,7 +35,7 @@ namespace VoiceChess.Example.PaintingCells
 
         private static void FindeKingCells(GameObject kingCellObject, string gameState)
         {
-            // Знайти клітинку короля
+            // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
             foreach (FigureParams figure in FigureMover.Figures)
             {
                 if (figure.Type == FigureParams.TypeOfFigure.King)
@@ -45,7 +45,7 @@ namespace VoiceChess.Example.PaintingCells
                 }
             }
 
-            // Якщо король під шахом, фарбуємо його клітинку в червоний
+            // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (gameState == GameState.WhiteInCheck.ToString() || gameState == GameState.BlackInCheck.ToString())
             {
                 if (kingCellObject != null)
@@ -57,7 +57,7 @@ namespace VoiceChess.Example.PaintingCells
                     }
                 }
             }
-            // Якщо шаху більше немає, повертаємо клітинці короля її оригінальний колір
+            // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
             else if (gameState == GameState.NotCompleted.ToString() && kingCellObject != null)
             {
                 UpdateCellsColor();
@@ -100,7 +100,7 @@ namespace VoiceChess.Example.PaintingCells
 
         private static void UpdateCellsColor()
         {
-            // Оновлюємо кольори всіх клітинок перед підсвічуванням
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             foreach (var cell in FigureMover.BoardCells)
             {
                 if (_originalCellColors.TryGetValue(cell, out Color originalColor))

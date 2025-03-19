@@ -1,8 +1,9 @@
-using System.Collections.Generic;
+пїњusing System.Collections.Generic;
 using UnityEngine;
 using VoiceChess.FigureParameters;
 using VoiceChess.MoveFigureManager;
 using VoiceChess.Example.PaintingCells;
+using VoiceChess.Example.CameraMoves;
 using ChessSharp;
 using ChessSharp.SquareData;
 
@@ -63,7 +64,6 @@ namespace VoiceChess.Example.Moving
                 FigureParams clickedFigure = hit.collider.GetComponent<FigureParams>();
                 GameObject clickedCell = hit.collider.gameObject;
 
-                // якщо натиснута ф≥гура
                 if (clickedFigure != null)
                 {
                     Player currentPlayer = FigureMoveManager.Board.WhoseTurn();
@@ -80,7 +80,7 @@ namespace VoiceChess.Example.Moving
                     }
                     else
                     {
-                        // якщо натискаЇш на ворожу ф≥гуру, перев≥р€Їмо можлив≥сть бою
+
                         if (CanAttack(clickedFigure))
                         {
                             clickedFigure.gameObject.SetActive(false);
@@ -89,14 +89,16 @@ namespace VoiceChess.Example.Moving
                             {
                                 clickedCell.name = figureParams.CurrentPosition;
                                 MakeFigureMove(clickedCell);
+                                CameraMovement.SwitchCameraPosition();
                             }
                         }
                     }
                 }
-                // якщо натиснута кл≥тинка
+
                 else if (SelectedFigure != null && BoardCells.Contains(clickedCell))
                 {
                     MakeFigureMove(clickedCell);
+                    CameraMovement.SwitchCameraPosition();
                 }
             }
         }
@@ -112,7 +114,7 @@ namespace VoiceChess.Example.Moving
             DeselectFigure();
 
             SelectedFigure = figure;
-            SelectedFigure.transform.position += Vector3.up * 0.5f; // ѕ≥дн≥маЇмо ф≥гуру
+            SelectedFigure.transform.position += Vector3.up * 0.5f;
 
             List<GameObject> validMoves = GetValidMoveCells(figure);
             HighlightCells.PaintCells(validMoves, isHighlight: true);
@@ -128,41 +130,6 @@ namespace VoiceChess.Example.Moving
 
             HighlightCells.PaintCells(HighlightCells.HighlightedCellsObjects, isHighlight: false);
             HighlightCells.HighlightedCellsObjects.Clear();
-        }
-
-        private void MakeFigureMove(GameObject targetCell)
-        {
-            // якщо кл≥тинка м≥стить ворожу ф≥гуру, використовуЇмо њњ позиц≥ю
-            FigureParams figureOnCell = GetFigureOnCell(targetCell);
-            string newPosition;
-
-            if (figureOnCell != null && figureOnCell.TeamColor != SelectedFigure.TeamColor)
-            {
-                newPosition = figureOnCell.CurrentPosition;
-            }
-            else
-            {
-                newPosition = targetCell.name;
-            }
-
-            // ѕерев≥рка вал≥дност≥ ходу
-            if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))
-            {
-                MovingObject(newPosition, targetCell);
-
-                DeselectFigure();
-            }
-        }
-
-        private void MovingObject(string newPosition, GameObject targetCell)
-        {
-            Vector3 currentPosition = SelectedFigure.transform.position;
-            Vector3 newPositionInWorld = targetCell.transform.position;
-            newPositionInWorld.y = currentPosition.y;
-            SelectedFigure.transform.position = newPositionInWorld;
-
-            SelectedFigure.PreviousPosition = SelectedFigure.CurrentPosition;
-            SelectedFigure.CurrentPosition = newPosition;
         }
 
         private List<GameObject> GetValidMoveCells(FigureParams figure)
@@ -195,15 +162,49 @@ namespace VoiceChess.Example.Moving
             return false;
         }
 
+        private void MakeFigureMove(GameObject targetCell)
+        {
+
+            FigureParams figureOnCell = GetFigureOnCell(targetCell);
+            string newPosition;
+
+            if (figureOnCell != null && figureOnCell.TeamColor != SelectedFigure.TeamColor)
+            {
+                newPosition = figureOnCell.CurrentPosition;
+            }
+            else
+            {
+                newPosition = targetCell.name;
+            }
+
+            if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))
+            {
+                MovingObject(newPosition, targetCell);
+
+                DeselectFigure();
+            }
+        }
+
+        private void MovingObject(string newPosition, GameObject targetCell)
+        {
+            Vector3 currentPosition = SelectedFigure.transform.position;
+            Vector3 newPositionInWorld = targetCell.transform.position;
+            newPositionInWorld.y = currentPosition.y;
+            SelectedFigure.transform.position = newPositionInWorld;
+
+            SelectedFigure.PreviousPosition = SelectedFigure.CurrentPosition;
+            SelectedFigure.CurrentPosition = newPosition;
+        }
+
         private bool CanAttack(FigureParams enemyFigure)
         {
             try
             {
                 return SelectedFigure.TeamColor != enemyFigure.TeamColor;
             }
-            catch 
-            { 
-                return false; 
+            catch
+            {
+                return false;
             }
         }
     }

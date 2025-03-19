@@ -65,7 +65,7 @@ namespace VoiceChess.MoveFigureManager
                     {
                         if (CreateMoveAtributes(destinationSquare, figure, newPosition))
                         {
-                            //Debug.Log($"Move successful: {figure.Type} from {figure.CurrentPosition} to {newPosition}");
+                            //Debug.Log(_lastMoveResult);
                             return true;
                         }
                     }
