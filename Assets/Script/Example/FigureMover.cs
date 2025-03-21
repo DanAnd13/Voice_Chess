@@ -6,6 +6,7 @@ using VoiceChess.Example.PaintingCells;
 using VoiceChess.Example.CameraMoves;
 using ChessSharp;
 using ChessSharp.SquareData;
+using VoiceChess.BoardCellsParameters;
 
 namespace VoiceChess.Example.Moving
 {
@@ -23,6 +24,8 @@ namespace VoiceChess.Example.Moving
         public static List<GameObject> BoardCells = new List<GameObject>();
         [HideInInspector]
         public static FigureParams[] Figures;
+
+        private static BoardCellsParams _boardCellsParams;
 
         private void Awake()
         {
@@ -44,11 +47,11 @@ namespace VoiceChess.Example.Moving
             }
         }
 
-        public static FigureParams GetFigureOnCell(GameObject cell)
+        public static FigureParams GetFigureOnCell(BoardCellsParams cell)
         {
             foreach (FigureParams figure in Figures)
             {
-                if (figure.CurrentPosition == cell.name)
+                if (figure.CurrentPosition == cell.NameOfCell)
                 {
                     return figure;
                 }
@@ -84,10 +87,12 @@ namespace VoiceChess.Example.Moving
                         if (CanAttack(clickedFigure))
                         {
                             clickedFigure.gameObject.SetActive(false);
-                            FigureParams figureParams = clickedFigure;
-                            if (figureParams != null)
+
+                            string attackedFigurePosition = clickedFigure.CurrentPosition;
+                            clickedCell = BoardCells.Find(cell => cell.name == attackedFigurePosition);
+
+                            if (clickedCell != null)
                             {
-                                clickedCell.name = figureParams.CurrentPosition;
                                 MakeFigureMove(clickedCell);
                                 CameraMovement.SwitchCameraPosition();
                             }
@@ -138,7 +143,8 @@ namespace VoiceChess.Example.Moving
 
             foreach (GameObject cell in BoardCells)
             {
-                string cellName = cell.name;
+                _boardCellsParams = cell.GetComponent<BoardCellsParams>();
+                string cellName = _boardCellsParams.NameOfCell;
                 Square destinationSquare = Square.Parse(cellName);
 
                 if (CheckValidMove(destinationSquare, figure, cellName))
@@ -164,8 +170,9 @@ namespace VoiceChess.Example.Moving
 
         private void MakeFigureMove(GameObject targetCell)
         {
+            BoardCellsParams boardCellsParams = targetCell.GetComponent<BoardCellsParams>();
 
-            FigureParams figureOnCell = GetFigureOnCell(targetCell);
+            FigureParams figureOnCell = GetFigureOnCell(boardCellsParams);
             string newPosition;
 
             if (figureOnCell != null && figureOnCell.TeamColor != SelectedFigure.TeamColor)
@@ -174,7 +181,7 @@ namespace VoiceChess.Example.Moving
             }
             else
             {
-                newPosition = targetCell.name;
+                newPosition = boardCellsParams.NameOfCell;
             }
 
             if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))

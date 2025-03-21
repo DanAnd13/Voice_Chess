@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using VoiceChess.BoardCellsParameters;
 using VoiceChess.Example.Moving;
 using VoiceChess.FigureParameters;
 
@@ -13,7 +14,7 @@ namespace VoiceChess.Example.PaintingCells
         [HideInInspector]
         public static List<GameObject> HighlightedCellsObjects = new List<GameObject>();
 
-        private static Dictionary<GameObject, Color> _originalCellColors = new Dictionary<GameObject, Color>();
+        private static BoardCellsParams _boardCellsParams;
 
         public static void PaintCells(List<GameObject> cellsObjects, bool isHighlight)
         {
@@ -35,7 +36,6 @@ namespace VoiceChess.Example.PaintingCells
 
         private static void FindeKingCells(GameObject kingCellObject, string gameState)
         {
-            // ������ ������� ������
             foreach (FigureParams figure in FigureMover.Figures)
             {
                 if (figure.Type == FigureParams.TypeOfFigure.King)
@@ -45,7 +45,6 @@ namespace VoiceChess.Example.PaintingCells
                 }
             }
 
-            // ���� ������ �� �����, ������� ���� ������� � ��������
             if (gameState == GameState.WhiteInCheck.ToString() || gameState == GameState.BlackInCheck.ToString())
             {
                 if (kingCellObject != null)
@@ -53,11 +52,10 @@ namespace VoiceChess.Example.PaintingCells
                     Renderer kingCellRenderer = kingCellObject.GetComponent<Renderer>();
                     if (kingCellRenderer != null)
                     {
-                        ColorFilling(Color.red, kingCellRenderer, kingCellObject);
+                        kingCellRenderer.material.color = Color.red;
                     }
                 }
             }
-            // ���� ���� ����� ����, ��������� ������� ������ �� ����������� ����
             else if (gameState == GameState.NotCompleted.ToString() && kingCellObject != null)
             {
                 UpdateCellsColor();
@@ -69,43 +67,35 @@ namespace VoiceChess.Example.PaintingCells
             foreach (GameObject cell in cells)
             {
                 Renderer cellRenderer = cell.GetComponent<Renderer>();
+                _boardCellsParams = cell.GetComponent<BoardCellsParams>();
                 if (cellRenderer != null)
                 {
                     if (isHighlight)
                     {
-                        FigureParams figureOnCell = FigureMover.GetFigureOnCell(cell);
+                        FigureParams figureOnCell = FigureMover.GetFigureOnCell(_boardCellsParams);
                         if (figureOnCell != null && figureOnCell.TeamColor != FigureMover.SelectedFigure.TeamColor)
                         {
-                            ColorFilling(new Color(1f, 0.647f, 0f), cellRenderer, cell);
+                            cellRenderer.material.color = new Color(1f, 0.647f, 0f);
                         }
                         else
                         {
-                            ColorFilling(Color.green, cellRenderer, cell);
+                            cellRenderer.material.color = Color.green;
                         }
 
-                        HighlightedCellsObjects.Add(cell);
+                        HighlightedCellsObjects.Add(cell.gameObject);
                     }
                 }
             }
         }
 
-        private static void ColorFilling(Color newColor, Renderer cellRenderer, GameObject cellObject)
-        {
-            if (!_originalCellColors.ContainsKey(cellObject))
-            {
-                _originalCellColors[cellObject] = cellRenderer.material.color;
-            }
-            cellRenderer.material.color = newColor;
-        }
-
         private static void UpdateCellsColor()
         {
-            // ��������� ������� ��� ������� ����� ������������
             foreach (var cell in FigureMover.BoardCells)
             {
-                if (_originalCellColors.TryGetValue(cell, out Color originalColor))
+                BoardCellsParams cellParams = cell.GetComponent<BoardCellsParams>();
+                if (cellParams != null && cellParams.ColorOfCell != null)
                 {
-                    cell.GetComponent<Renderer>().material.color = originalColor;
+                    cell.GetComponent<Renderer>().material.color = cellParams.ColorOfCell;
                 }
             }
         }
