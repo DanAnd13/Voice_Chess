@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using VoiceChess.BoardCellsParameters;
-using VoiceChess.Example.Moving;
+using VoiceChess.Example.Manager;
 using VoiceChess.FigureParameters;
 
 namespace VoiceChess.Example.PaintingCells
@@ -18,12 +18,11 @@ namespace VoiceChess.Example.PaintingCells
 
         public static void PaintCells(List<GameObject> cellsObjects, bool isHighlight)
         {
-            string gameState = FigureMover.MoveManager.UpdateGameState();
-            GameObject kingCellObject = null;
+            string gameState = GameManager.MoveManager.UpdateGameState();
 
             UpdateCellsColor();
 
-            FindeKingCells(kingCellObject, gameState);
+            FindKingCell(gameState);
 
             ShowingPossibleMoves(cellsObjects, isHighlight);
 
@@ -34,33 +33,48 @@ namespace VoiceChess.Example.PaintingCells
             }
         }
 
-        private static void FindeKingCells(GameObject kingCellObject, string gameState)
+        private static void FindKingCell(string gameState)
         {
-            foreach (FigureParams figure in FigureMover.Figures)
+            GameObject kingCellObject = null;
+            FigureParams.TypeOfTeam teamInCheck;
+
+            // Визначаємо, яка команда під шахом
+            if (gameState == GameState.WhiteInCheck.ToString())
             {
-                if (figure.Type == FigureParams.TypeOfFigure.King)
+                teamInCheck = FigureParams.TypeOfTeam.WhiteTeam;
+            }
+            else if (gameState == GameState.BlackInCheck.ToString())
+            {
+                teamInCheck = FigureParams.TypeOfTeam.BlackTeam;
+            }
+            else
+            {
+                // Якщо немає шаху, просто оновлюємо кольори клітинок
+                UpdateCellsColor();
+                return;
+            }
+
+            // Знаходимо короля саме тієї команди, що під шахом
+            foreach (FigureParams figure in GameManager.Figures)
+            {
+                if (figure.Type == FigureParams.TypeOfFigure.King && figure.TeamColor == teamInCheck)
                 {
-                    kingCellObject = FigureMover.BoardCells.Find(cell => cell.name == figure.CurrentPosition);
-                    if (kingCellObject != null) break;
+                    kingCellObject = GameManager.BoardCells.Find(cell => cell.name == figure.CurrentPosition);
+                    break; // Зупиняємо пошук, як тільки знайшли
                 }
             }
 
-            if (gameState == GameState.WhiteInCheck.ToString() || gameState == GameState.BlackInCheck.ToString())
+            // Підсвічуємо клітинку короля, якщо знайшли
+            if (kingCellObject != null)
             {
-                if (kingCellObject != null)
+                Renderer kingCellRenderer = kingCellObject.GetComponent<Renderer>();
+                if (kingCellRenderer != null)
                 {
-                    Renderer kingCellRenderer = kingCellObject.GetComponent<Renderer>();
-                    if (kingCellRenderer != null)
-                    {
-                        kingCellRenderer.material.color = Color.red;
-                    }
+                    kingCellRenderer.material.color = Color.red;
                 }
             }
-            else if (gameState == GameState.NotCompleted.ToString() && kingCellObject != null)
-            {
-                UpdateCellsColor();
-            }
         }
+
 
         private static void ShowingPossibleMoves(List<GameObject> cells, bool isHighlight)
         {
@@ -68,12 +82,14 @@ namespace VoiceChess.Example.PaintingCells
             {
                 Renderer cellRenderer = cell.GetComponent<Renderer>();
                 _boardCellsParams = cell.GetComponent<BoardCellsParams>();
+
                 if (cellRenderer != null)
                 {
                     if (isHighlight)
                     {
-                        FigureParams figureOnCell = FigureMover.GetFigureOnCell(_boardCellsParams);
-                        if (figureOnCell != null && figureOnCell.TeamColor != FigureMover.SelectedFigure.TeamColor)
+                        FigureParams figureOnCell = GameManager.GetFigureOnCell(_boardCellsParams);
+
+                        if (figureOnCell != null && figureOnCell.TeamColor != GameManager.SelectedFigure.TeamColor)
                         {
                             cellRenderer.material.color = new Color(1f, 0.647f, 0f);
                         }
@@ -88,9 +104,10 @@ namespace VoiceChess.Example.PaintingCells
             }
         }
 
+
         private static void UpdateCellsColor()
         {
-            foreach (var cell in FigureMover.BoardCells)
+            foreach (var cell in GameManager.BoardCells)
             {
                 BoardCellsParams cellParams = cell.GetComponent<BoardCellsParams>();
                 if (cellParams != null && cellParams.ColorOfCell != null)

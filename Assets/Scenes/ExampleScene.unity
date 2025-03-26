@@ -364,7 +364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &45296349
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,7 +484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &56387019
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,7 +604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &72843196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -847,7 +847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: B1
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &99744679
 GameObject:
   m_ObjectHideFlags: 0
@@ -1000,7 +1000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &102806358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,7 +1120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: E3
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &121765975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1240,7 +1240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &162493606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1693,7 +1693,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &217611602
 GameObject:
   m_ObjectHideFlags: 0
@@ -1813,7 +1813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: G1
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &223916376
 GameObject:
   m_ObjectHideFlags: 0
@@ -1933,7 +1933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &261187044
 GameObject:
   m_ObjectHideFlags: 0
@@ -2053,7 +2053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &268679743
 GameObject:
   m_ObjectHideFlags: 0
@@ -2279,7 +2279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: C4
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &318438612
 GameObject:
   m_ObjectHideFlags: 0
@@ -2399,7 +2399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &351761467
 GameObject:
   m_ObjectHideFlags: 0
@@ -2519,7 +2519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: F3
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &376848868
 GameObject:
   m_ObjectHideFlags: 0
@@ -2639,7 +2639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &381478833
 GameObject:
   m_ObjectHideFlags: 0
@@ -2967,7 +2967,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &446298234
 GameObject:
   m_ObjectHideFlags: 0
@@ -3087,7 +3087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: A2
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &509704519
 GameObject:
   m_ObjectHideFlags: 0
@@ -3207,7 +3207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &523676256
 GameObject:
   m_ObjectHideFlags: 0
@@ -3395,7 +3395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: F2
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &550018584
 GameObject:
   m_ObjectHideFlags: 0
@@ -3515,7 +3515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: A4
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &557998063
 GameObject:
   m_ObjectHideFlags: 0
@@ -3741,7 +3741,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &561860790
 GameObject:
   m_ObjectHideFlags: 0
@@ -3861,7 +3861,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: B4
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &564157678
 GameObject:
   m_ObjectHideFlags: 0
@@ -3981,7 +3981,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &570854668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4572,7 +4572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: C2
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &630895483
 GameObject:
   m_ObjectHideFlags: 0
@@ -4692,7 +4692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &651548413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4935,7 +4935,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &708103570
 GameObject:
   m_ObjectHideFlags: 0
@@ -5055,7 +5055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &737837428
 GameObject:
   m_ObjectHideFlags: 0
@@ -5175,7 +5175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: C1
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &779601355
 GameObject:
   m_ObjectHideFlags: 0
@@ -5295,7 +5295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &784079231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5538,7 +5538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: G2
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &795994353
 GameObject:
   m_ObjectHideFlags: 0
@@ -5658,7 +5658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: H1
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &825354855
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5901,7 +5901,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &865175451
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6388,7 +6388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -6614,7 +6614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: H3
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1006609625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6904,7 +6904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1055627145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7147,7 +7147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1096551982
 GameObject:
   m_ObjectHideFlags: 0
@@ -7369,7 +7369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: E2
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1120969728
 GameObject:
   m_ObjectHideFlags: 0
@@ -7591,7 +7591,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1141682076
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7834,7 +7834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: E1
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1158182357
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8077,7 +8077,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1262289655
 GameObject:
   m_ObjectHideFlags: 0
@@ -8197,7 +8197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: B2
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1271324570
 GameObject:
   m_ObjectHideFlags: 0
@@ -8317,7 +8317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1292099864
 GameObject:
   m_ObjectHideFlags: 0
@@ -8437,7 +8437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1298276791
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8680,7 +8680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1325745766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9152,7 +9152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: H2
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1429819835
 GameObject:
   m_ObjectHideFlags: 0
@@ -9272,7 +9272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: C3
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1480397502
 GameObject:
   m_ObjectHideFlags: 0
@@ -9392,7 +9392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1481260945
 GameObject:
   m_ObjectHideFlags: 0
@@ -9668,7 +9668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: F1
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1508172187
 GameObject:
   m_ObjectHideFlags: 0
@@ -9788,7 +9788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: D2
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1523847853
 GameObject:
   m_ObjectHideFlags: 0
@@ -9908,7 +9908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1527234624
 GameObject:
   m_ObjectHideFlags: 0
@@ -10186,7 +10186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: A1
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1561019913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10552,7 +10552,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1585887765
 GameObject:
   m_ObjectHideFlags: 0
@@ -10672,7 +10672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1631946417
 GameObject:
   m_ObjectHideFlags: 0
@@ -10765,6 +10765,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FigureMoveManager: {fileID: 1631946418}
   ParentBoard: {fileID: 936171857}
+  WhiteCapturedArea: {fileID: 2128932265}
+  BlackCapturedArea: {fileID: 1752873562}
 --- !u!1 &1641150502
 GameObject:
   m_ObjectHideFlags: 0
@@ -10884,7 +10886,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1648184163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11250,7 +11252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1671353797
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11616,7 +11618,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: D1
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1715006870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11982,7 +11984,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1751928174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12106,6 +12108,37 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: dc780bbe80163bc46883e8c2d96af493, type: 3}
+--- !u!1 &1752873561
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1752873562}
+  m_Layer: 0
+  m_Name: BlackPlayerPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1752873562
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752873561}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.04, y: 0, z: 6.94}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1770946188
 GameObject:
   m_ObjectHideFlags: 0
@@ -12225,7 +12258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1800801805
 GameObject:
   m_ObjectHideFlags: 0
@@ -12345,7 +12378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1828507191
 GameObject:
   m_ObjectHideFlags: 0
@@ -12465,7 +12498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: 
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1828654876
 GameObject:
   m_ObjectHideFlags: 0
@@ -12748,7 +12781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: G3
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &1888517463
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13208,7 +13241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: A3
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &2051060107
 GameObject:
   m_ObjectHideFlags: 0
@@ -13328,7 +13361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: B3
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &2111396516
 GameObject:
   m_ObjectHideFlags: 0
@@ -13448,7 +13481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameOfCell: D3
-  MaterialOfCell: {fileID: 0}
+  ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &2117698322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13572,6 +13605,37 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 25f5852bdc32bf74790bd0cfd333a532, type: 3}
+--- !u!1 &2128932264
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2128932265}
+  m_Layer: 0
+  m_Name: WhitePlayerPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2128932265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2128932264}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.04, y: 0, z: -4.14}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2134516281
 GameObject:
   m_ObjectHideFlags: 0
@@ -13853,3 +13917,5 @@ SceneRoots:
   - {fileID: 523676259}
   - {fileID: 99744680}
   - {fileID: 1631946419}
+  - {fileID: 2128932265}
+  - {fileID: 1752873562}

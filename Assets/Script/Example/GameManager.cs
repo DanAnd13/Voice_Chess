@@ -4,17 +4,20 @@ using VoiceChess.FigureParameters;
 using VoiceChess.MoveFigureManager;
 using VoiceChess.Example.PaintingCells;
 using VoiceChess.Example.CameraMoves;
+using VoiceChess.Example.FigureMoves;
 using ChessSharp;
 using ChessSharp.SquareData;
 using VoiceChess.BoardCellsParameters;
 
-namespace VoiceChess.Example.Moving
+namespace VoiceChess.Example.Manager
 {
 
-    public class FigureMover : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
         public FigureMoveManager FigureMoveManager;
         public Transform ParentBoard;
+        public Transform WhiteCapturedArea; // Позиція для вибитих чорних фігур
+        public Transform BlackCapturedArea; // Позиція для вибитих білих фігур
 
         [HideInInspector]
         public static FigureMoveManager MoveManager;
@@ -51,13 +54,14 @@ namespace VoiceChess.Example.Moving
         {
             foreach (FigureParams figure in Figures)
             {
-                if (figure.CurrentPosition == cell.NameOfCell)
+                if (figure.CurrentPosition != "Captured" && figure.CurrentPosition == cell.NameOfCell)
                 {
                     return figure;
                 }
             }
             return null;
         }
+
 
         private void HandleClick()
         {
@@ -86,15 +90,14 @@ namespace VoiceChess.Example.Moving
 
                         if (CanAttack(clickedFigure))
                         {
-                            clickedFigure.gameObject.SetActive(false);
 
                             string attackedFigurePosition = clickedFigure.CurrentPosition;
                             clickedCell = BoardCells.Find(cell => cell.name == attackedFigurePosition);
 
                             if (clickedCell != null)
                             {
+                                FigureMovement.CaptureFigure(clickedFigure, BlackCapturedArea, WhiteCapturedArea);
                                 MakeFigureMove(clickedCell);
-                                CameraMovement.SwitchCameraPosition();
                             }
                         }
                     }
@@ -103,7 +106,6 @@ namespace VoiceChess.Example.Moving
                 else if (SelectedFigure != null && BoardCells.Contains(clickedCell))
                 {
                     MakeFigureMove(clickedCell);
-                    CameraMovement.SwitchCameraPosition();
                 }
             }
         }
@@ -147,13 +149,14 @@ namespace VoiceChess.Example.Moving
                 string cellName = _boardCellsParams.NameOfCell;
                 Square destinationSquare = Square.Parse(cellName);
 
-                if (CheckValidMove(destinationSquare, figure, cellName))
+                if (CheckValidMove(destinationSquare, figure, cellName) && GetFigureOnCell(_boardCellsParams)?.CurrentPosition != "Captured")
                 {
                     validCells.Add(cell);
                 }
             }
             return validCells;
         }
+
 
         private bool CheckValidMove(Square destinationSquare, FigureParams figure, string newPosition)
         {
@@ -186,22 +189,15 @@ namespace VoiceChess.Example.Moving
 
             if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))
             {
-                MovingObject(newPosition, targetCell);
-
-                DeselectFigure();
+                FigureMovement.MovingObject(newPosition, targetCell, SelectedFigure, () =>
+                {
+                    CameraMovement.SwitchCameraPosition();
+                    DeselectFigure();
+                });
             }
         }
 
-        private void MovingObject(string newPosition, GameObject targetCell)
-        {
-            Vector3 currentPosition = SelectedFigure.transform.position;
-            Vector3 newPositionInWorld = targetCell.transform.position;
-            newPositionInWorld.y = currentPosition.y;
-            SelectedFigure.transform.position = newPositionInWorld;
 
-            SelectedFigure.PreviousPosition = SelectedFigure.CurrentPosition;
-            SelectedFigure.CurrentPosition = newPosition;
-        }
 
         private bool CanAttack(FigureParams enemyFigure)
         {
