@@ -61,11 +61,10 @@ namespace VoiceChess.MoveFigureManager
                     bool matchByName = !string.IsNullOrWhiteSpace(figureName) && figure.Type.ToString() == figureName;
                     bool matchByPosition = !string.IsNullOrWhiteSpace(currentPosition) && figure.CurrentPosition == currentPosition;
 
-                    if (matchByName || matchByPosition)
+                    if ((matchByName || matchByPosition) && figure.Status == FigureParams.TypeOfStatus.OnGame)
                     {
                         if (CreateMoveAtributes(destinationSquare, figure, newPosition))
                         {
-                            //Debug.Log(_lastMoveResult);
                             return true;
                         }
                     }
@@ -102,7 +101,6 @@ namespace VoiceChess.MoveFigureManager
         {
             if (Board.MakeMove(move, isMoveValidated: true))
             {
-                // Оновлюємо позицію фігури
                 figure.PreviousPosition = figure.CurrentPosition;
                 figure.CurrentPosition = newPosition;
 

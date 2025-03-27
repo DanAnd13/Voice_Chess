@@ -223,6 +223,7 @@ MonoBehaviour:
   CurrentPosition: G1
   PreviousPosition: G1
   TeamColor: 1
+  Status: 0
 --- !u!64 &19615164
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -365,6 +366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &45296349
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,6 +487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &56387019
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,6 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &72843196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -706,6 +710,7 @@ MonoBehaviour:
   CurrentPosition: D1
   PreviousPosition: D1
   TeamColor: 1
+  Status: 0
 --- !u!64 &72843202
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -848,6 +853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: B1
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &99744679
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,6 +1007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &102806358
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,6 +1128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: E3
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &121765975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1241,6 +1249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &162493606
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,6 +1561,7 @@ MonoBehaviour:
   CurrentPosition: D8
   PreviousPosition: D8
   TeamColor: 0
+  Status: 0
 --- !u!64 &192569679
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1694,6 +1704,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &217611602
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,6 +1825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: G1
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &223916376
 GameObject:
   m_ObjectHideFlags: 0
@@ -1934,6 +1946,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &261187044
 GameObject:
   m_ObjectHideFlags: 0
@@ -2054,6 +2067,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &268679743
 GameObject:
   m_ObjectHideFlags: 0
@@ -2280,6 +2294,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: C4
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &318438612
 GameObject:
   m_ObjectHideFlags: 0
@@ -2400,6 +2415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &351761467
 GameObject:
   m_ObjectHideFlags: 0
@@ -2520,6 +2536,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: F3
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &376848868
 GameObject:
   m_ObjectHideFlags: 0
@@ -2640,6 +2657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &381478833
 GameObject:
   m_ObjectHideFlags: 0
@@ -2968,6 +2986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &446298234
 GameObject:
   m_ObjectHideFlags: 0
@@ -3088,6 +3107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: A2
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &509704519
 GameObject:
   m_ObjectHideFlags: 0
@@ -3208,6 +3228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &523676256
 GameObject:
   m_ObjectHideFlags: 0
@@ -3396,6 +3417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: F2
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &550018584
 GameObject:
   m_ObjectHideFlags: 0
@@ -3516,6 +3538,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: A4
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &557998063
 GameObject:
   m_ObjectHideFlags: 0
@@ -3742,6 +3765,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &561860790
 GameObject:
   m_ObjectHideFlags: 0
@@ -3862,6 +3886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: B4
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &564157678
 GameObject:
   m_ObjectHideFlags: 0
@@ -3982,6 +4007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &570854668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4083,6 +4109,7 @@ MonoBehaviour:
   CurrentPosition: G7
   PreviousPosition: G7
   TeamColor: 0
+  Status: 0
 --- !u!64 &570854674
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4308,6 +4335,7 @@ MonoBehaviour:
   CurrentPosition: A7
   PreviousPosition: A7
   TeamColor: 0
+  Status: 0
 --- !u!64 &604374672
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4431,6 +4459,7 @@ MonoBehaviour:
   CurrentPosition: H7
   PreviousPosition: H7
   TeamColor: 0
+  Status: 0
 --- !u!64 &606130424
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4573,6 +4602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: C2
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &630895483
 GameObject:
   m_ObjectHideFlags: 0
@@ -4693,6 +4723,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &651548413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4794,6 +4825,7 @@ MonoBehaviour:
   CurrentPosition: B2
   PreviousPosition: B2
   TeamColor: 1
+  Status: 0
 --- !u!64 &651548419
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -4936,6 +4968,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &708103570
 GameObject:
   m_ObjectHideFlags: 0
@@ -5056,6 +5089,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &737837428
 GameObject:
   m_ObjectHideFlags: 0
@@ -5176,6 +5210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: C1
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &779601355
 GameObject:
   m_ObjectHideFlags: 0
@@ -5296,6 +5331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &784079231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5397,6 +5433,7 @@ MonoBehaviour:
   CurrentPosition: A1
   PreviousPosition: A1
   TeamColor: 1
+  Status: 0
 --- !u!64 &784079237
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5539,6 +5576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: G2
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &795994353
 GameObject:
   m_ObjectHideFlags: 0
@@ -5659,6 +5697,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: H1
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &825354855
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5760,6 +5799,7 @@ MonoBehaviour:
   CurrentPosition: A8
   PreviousPosition: A8
   TeamColor: 0
+  Status: 0
 --- !u!64 &825354861
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5902,6 +5942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &865175451
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6003,6 +6044,7 @@ MonoBehaviour:
   CurrentPosition: H8
   PreviousPosition: H8
   TeamColor: 0
+  Status: 0
 --- !u!64 &865175457
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6389,6 +6431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -6475,14 +6518,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.47821087, y: -0, z: -0, w: 0.8782451}
-  m_LocalPosition: {x: 0, y: 12, z: -5.59}
+  m_LocalRotation: {x: 0.5581983, y: -0, z: -0, w: 0.82970756}
+  m_LocalPosition: {x: 0, y: 12, z: -2.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2019154638}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 57.137, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 67.863, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6615,6 +6658,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: H3
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1006609625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6716,6 +6760,7 @@ MonoBehaviour:
   CurrentPosition: F8
   PreviousPosition: F8
   TeamColor: 0
+  Status: 0
 --- !u!64 &1006609631
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6905,6 +6950,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1055627145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7006,6 +7052,7 @@ MonoBehaviour:
   CurrentPosition: G2
   PreviousPosition: G2
   TeamColor: 1
+  Status: 0
 --- !u!64 &1055627151
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -7148,6 +7195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1096551982
 GameObject:
   m_ObjectHideFlags: 0
@@ -7370,6 +7418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: E2
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1120969728
 GameObject:
   m_ObjectHideFlags: 0
@@ -7592,6 +7641,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1141682076
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7693,6 +7743,7 @@ MonoBehaviour:
   CurrentPosition: E7
   PreviousPosition: E7
   TeamColor: 0
+  Status: 0
 --- !u!64 &1141682082
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -7835,6 +7886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: E1
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1158182357
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7936,6 +7988,7 @@ MonoBehaviour:
   CurrentPosition: E2
   PreviousPosition: E2
   TeamColor: 1
+  Status: 0
 --- !u!64 &1158182363
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8078,6 +8131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1262289655
 GameObject:
   m_ObjectHideFlags: 0
@@ -8198,6 +8252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: B2
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1271324570
 GameObject:
   m_ObjectHideFlags: 0
@@ -8318,6 +8373,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1292099864
 GameObject:
   m_ObjectHideFlags: 0
@@ -8438,6 +8494,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1298276791
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8539,6 +8596,7 @@ MonoBehaviour:
   CurrentPosition: F2
   PreviousPosition: F2
   TeamColor: 1
+  Status: 0
 --- !u!64 &1298276797
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8681,6 +8739,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1325745766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8782,6 +8841,7 @@ MonoBehaviour:
   CurrentPosition: D2
   PreviousPosition: D2
   TeamColor: 1
+  Status: 0
 --- !u!64 &1325745772
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -8905,6 +8965,7 @@ MonoBehaviour:
   CurrentPosition: D7
   PreviousPosition: D7
   TeamColor: 0
+  Status: 0
 --- !u!64 &1344983371
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9153,6 +9214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: H2
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1429819835
 GameObject:
   m_ObjectHideFlags: 0
@@ -9273,6 +9335,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: C3
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1480397502
 GameObject:
   m_ObjectHideFlags: 0
@@ -9393,6 +9456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1481260945
 GameObject:
   m_ObjectHideFlags: 0
@@ -9527,6 +9591,7 @@ MonoBehaviour:
   CurrentPosition: H1
   PreviousPosition: H1
   TeamColor: 1
+  Status: 0
 --- !u!64 &1492241506
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9669,6 +9734,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: F1
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1508172187
 GameObject:
   m_ObjectHideFlags: 0
@@ -9789,6 +9855,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: D2
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1523847853
 GameObject:
   m_ObjectHideFlags: 0
@@ -9909,6 +9976,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1527234624
 GameObject:
   m_ObjectHideFlags: 0
@@ -10045,6 +10113,7 @@ MonoBehaviour:
   CurrentPosition: H2
   PreviousPosition: H2
   TeamColor: 1
+  Status: 0
 --- !u!64 &1538834506
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10187,6 +10256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: A1
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1561019913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10288,6 +10358,7 @@ MonoBehaviour:
   CurrentPosition: G8
   PreviousPosition: G8
   TeamColor: 0
+  Status: 0
 --- !u!64 &1561019919
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10411,6 +10482,7 @@ MonoBehaviour:
   CurrentPosition: B1
   PreviousPosition: B1
   TeamColor: 1
+  Status: 0
 --- !u!64 &1561894977
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10553,6 +10625,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1585887765
 GameObject:
   m_ObjectHideFlags: 0
@@ -10673,6 +10746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1631946417
 GameObject:
   m_ObjectHideFlags: 0
@@ -10887,6 +10961,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1648184163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10988,6 +11063,7 @@ MonoBehaviour:
   CurrentPosition: E8
   PreviousPosition: E8
   TeamColor: 0
+  Status: 0
 --- !u!64 &1648184169
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11111,6 +11187,7 @@ MonoBehaviour:
   CurrentPosition: B8
   PreviousPosition: B8
   TeamColor: 0
+  Status: 0
 --- !u!64 &1654243186
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11253,6 +11330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1671353797
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11354,6 +11432,7 @@ MonoBehaviour:
   CurrentPosition: E1
   PreviousPosition: E1
   TeamColor: 1
+  Status: 0
 --- !u!64 &1671353803
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11477,6 +11556,7 @@ MonoBehaviour:
   CurrentPosition: C8
   PreviousPosition: C8
   TeamColor: 0
+  Status: 0
 --- !u!64 &1675094732
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11619,6 +11699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: D1
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1715006870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11720,6 +11801,7 @@ MonoBehaviour:
   CurrentPosition: F1
   PreviousPosition: F1
   TeamColor: 1
+  Status: 0
 --- !u!64 &1715006876
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11843,6 +11925,7 @@ MonoBehaviour:
   CurrentPosition: F7
   PreviousPosition: F7
   TeamColor: 0
+  Status: 0
 --- !u!64 &1723682280
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11985,6 +12068,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1751928174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12086,6 +12170,7 @@ MonoBehaviour:
   CurrentPosition: A2
   PreviousPosition: A2
   TeamColor: 1
+  Status: 0
 --- !u!64 &1751928180
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -12259,6 +12344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1800801805
 GameObject:
   m_ObjectHideFlags: 0
@@ -12379,6 +12465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1828507191
 GameObject:
   m_ObjectHideFlags: 0
@@ -12499,6 +12586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: 
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &1828654876
 GameObject:
   m_ObjectHideFlags: 0
@@ -12782,6 +12870,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: G3
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &1888517463
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12883,6 +12972,7 @@ MonoBehaviour:
   CurrentPosition: C2
   PreviousPosition: C2
   TeamColor: 1
+  Status: 0
 --- !u!64 &1888517469
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13100,6 +13190,7 @@ MonoBehaviour:
   CurrentPosition: B7
   PreviousPosition: B7
   TeamColor: 0
+  Status: 0
 --- !u!64 &2027641116
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13242,6 +13333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: A3
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &2051060107
 GameObject:
   m_ObjectHideFlags: 0
@@ -13362,6 +13454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: B3
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1 &2111396516
 GameObject:
   m_ObjectHideFlags: 0
@@ -13482,6 +13575,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NameOfCell: D3
   ColorOfCell: {r: 0, g: 0, b: 0, a: 0}
+  CellObject: {fileID: 0}
 --- !u!1001 &2117698322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13583,6 +13677,7 @@ MonoBehaviour:
   CurrentPosition: C1
   PreviousPosition: C1
   TeamColor: 1
+  Status: 0
 --- !u!64 &2117698328
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13886,6 +13981,7 @@ MonoBehaviour:
   CurrentPosition: C7
   PreviousPosition: C7
   TeamColor: 0
+  Status: 0
 --- !u!64 &2145870608
 MeshCollider:
   m_ObjectHideFlags: 0

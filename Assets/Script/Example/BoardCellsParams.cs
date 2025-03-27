@@ -11,10 +11,14 @@ namespace VoiceChess.BoardCellsParameters
         public string NameOfCell;
         [HideInInspector]
         public Color ColorOfCell;
+        [HideInInspector]
+        public GameObject CellObject;
 
         private void Awake()
         {
             NameOfCell = gameObject.name;
+
+            CellObject = gameObject;
 
             Renderer renderer = GetComponent<Renderer>();
             if (renderer != null)

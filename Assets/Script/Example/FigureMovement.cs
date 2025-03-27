@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using VoiceChess.BoardCellsParameters;
 using VoiceChess.FigureParameters;
 
 namespace VoiceChess.Example.FigureMoves
@@ -8,7 +9,7 @@ namespace VoiceChess.Example.FigureMoves
     {
         public static IEnumerator MoveObjectSmoothly(FigureParams selectedFigure, Vector3 targetPosition, System.Action onComplete)
         {
-            float duration = 0.5f; // Час переміщення
+            float duration = 0.5f;
             float elapsed = 0f;
             Vector3 startPosition = selectedFigure.transform.position;
 
@@ -21,19 +22,13 @@ namespace VoiceChess.Example.FigureMoves
 
             selectedFigure.transform.position = targetPosition;
 
-            onComplete?.Invoke(); // Викликаємо передану функцію після завершення руху
+            onComplete?.Invoke();
         }
 
-        public static void MovingObject(string newPosition, GameObject targetCell, FigureParams selectedFigure, System.Action onComplete)
+        public static void MovingObject(string newPosition, BoardCellsParams targetCell, FigureParams selectedFigure, System.Action onComplete)
         {
-            Vector3 newPositionInWorld = targetCell.transform.position;
-            newPositionInWorld.y = selectedFigure.transform.position.y; // Залишаємо ту ж висоту
-
-            // Спочатку зберігаємо попередню позицію, а потім змінюємо поточну
-            /*string previousPosition = selectedFigure.CurrentPosition;
-            selectedFigure.CurrentPosition = newPosition;
-            selectedFigure.PreviousPosition = previousPosition; // Тепер вони різні*/
-
+            Vector3 newPositionInWorld = targetCell.CellObject.transform.position;
+            newPositionInWorld.y = selectedFigure.transform.position.y;
             selectedFigure.StartCoroutine(MoveObjectSmoothly(selectedFigure, newPositionInWorld, onComplete));
         }
 
@@ -43,11 +38,11 @@ namespace VoiceChess.Example.FigureMoves
             Transform captureArea = (capturedFigure.TeamColor == FigureParams.TypeOfTeam.WhiteTeam) ?
                 blackCapturedArea : whiteCapturedArea;
 
-            capturedFigure.transform.SetParent(captureArea); // Фігура тепер у зоні вибитих
+            capturedFigure.transform.SetParent(captureArea);
             capturedFigure.transform.position = GetNextCapturePosition(captureArea);
 
-            capturedFigure.PreviousPosition = capturedFigure.CurrentPosition;
-            capturedFigure.CurrentPosition = "Captured"; // Позначаємо фігуру як вибиту
+            //capturedFigure.PreviousPosition = capturedFigure.CurrentPosition;
+            capturedFigure.Status = FigureParams.TypeOfStatus.OffGame;
         }
 
 

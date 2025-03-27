@@ -10,6 +10,7 @@ namespace VoiceChess.FigureParameters
         public string CurrentPosition;
         public string PreviousPosition;
         public TypeOfTeam TeamColor;
+        public TypeOfStatus Status;
         public enum TypeOfTeam
         {
             BlackTeam,
@@ -23,6 +24,11 @@ namespace VoiceChess.FigureParameters
             Knight,
             Pawn,
             Rook
+        }
+        public enum TypeOfStatus
+        {
+            OnGame,
+            OffGame
         }
 
     }

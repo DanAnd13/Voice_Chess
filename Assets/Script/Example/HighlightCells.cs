@@ -59,7 +59,7 @@ namespace VoiceChess.Example.PaintingCells
             {
                 if (figure.Type == FigureParams.TypeOfFigure.King && figure.TeamColor == teamInCheck)
                 {
-                    kingCellObject = GameManager.BoardCells.Find(cell => cell.name == figure.CurrentPosition);
+                    kingCellObject = GameManager.BoardCells.Find(cell => cell.NameOfCell == figure.CurrentPosition).gameObject;
                     break; // Зупиняємо пошук, як тільки знайшли
                 }
             }
@@ -89,7 +89,7 @@ namespace VoiceChess.Example.PaintingCells
                     {
                         FigureParams figureOnCell = GameManager.GetFigureOnCell(_boardCellsParams);
 
-                        if (figureOnCell != null && figureOnCell.TeamColor != GameManager.SelectedFigure.TeamColor)
+                        if (figureOnCell != null && figureOnCell.Status == FigureParams.TypeOfStatus.OnGame && figureOnCell.TeamColor != GameManager.SelectedFigure.TeamColor)
                         {
                             cellRenderer.material.color = new Color(1f, 0.647f, 0f);
                         }

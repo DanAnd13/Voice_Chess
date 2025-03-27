@@ -8,6 +8,7 @@ using VoiceChess.Example.FigureMoves;
 using ChessSharp;
 using ChessSharp.SquareData;
 using VoiceChess.BoardCellsParameters;
+using UnityEditor.SceneManagement;
 
 namespace VoiceChess.Example.Manager
 {
@@ -24,11 +25,9 @@ namespace VoiceChess.Example.Manager
         [HideInInspector]
         public static FigureParams SelectedFigure;
         [HideInInspector]
-        public static List<GameObject> BoardCells = new List<GameObject>();
+        public static List<BoardCellsParams> BoardCells = new List<BoardCellsParams>();
         [HideInInspector]
         public static FigureParams[] Figures;
-
-        private static BoardCellsParams _boardCellsParams;
 
         private void Awake()
         {
@@ -38,7 +37,7 @@ namespace VoiceChess.Example.Manager
 
             foreach (Transform cell in ParentBoard)
             {
-                BoardCells.Add(cell.gameObject);
+                BoardCells.Add(cell.gameObject.GetComponent<BoardCellsParams>());
             }
         }
 
@@ -54,7 +53,7 @@ namespace VoiceChess.Example.Manager
         {
             foreach (FigureParams figure in Figures)
             {
-                if (figure.CurrentPosition != "Captured" && figure.CurrentPosition == cell.NameOfCell)
+                if (figure.Status == FigureParams.TypeOfStatus.OnGame && figure.CurrentPosition == cell.NameOfCell)
                 {
                     return figure;
                 }
@@ -69,7 +68,7 @@ namespace VoiceChess.Example.Manager
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 FigureParams clickedFigure = hit.collider.GetComponent<FigureParams>();
-                GameObject clickedCell = hit.collider.gameObject;
+                BoardCellsParams clickedCell = hit.collider.GetComponent<BoardCellsParams>();
 
                 if (clickedFigure != null)
                 {
@@ -92,10 +91,11 @@ namespace VoiceChess.Example.Manager
                         {
 
                             string attackedFigurePosition = clickedFigure.CurrentPosition;
-                            clickedCell = BoardCells.Find(cell => cell.name == attackedFigurePosition);
+                            clickedCell = BoardCells.Find(cell => cell.NameOfCell == attackedFigurePosition);
 
                             if (clickedCell != null)
                             {
+                                
                                 FigureMovement.CaptureFigure(clickedFigure, BlackCapturedArea, WhiteCapturedArea);
                                 MakeFigureMove(clickedCell);
                             }
@@ -143,15 +143,14 @@ namespace VoiceChess.Example.Manager
         {
             List<GameObject> validCells = new List<GameObject>();
 
-            foreach (GameObject cell in BoardCells)
+            foreach (BoardCellsParams cell in BoardCells)
             {
-                _boardCellsParams = cell.GetComponent<BoardCellsParams>();
-                string cellName = _boardCellsParams.NameOfCell;
+                string cellName = cell.NameOfCell;
                 Square destinationSquare = Square.Parse(cellName);
 
-                if (CheckValidMove(destinationSquare, figure, cellName) && GetFigureOnCell(_boardCellsParams)?.CurrentPosition != "Captured")
+                if (CheckValidMove(destinationSquare, figure, cellName))
                 {
-                    validCells.Add(cell);
+                    validCells.Add(cell.CellObject);
                 }
             }
             return validCells;
@@ -171,11 +170,10 @@ namespace VoiceChess.Example.Manager
             return false;
         }
 
-        private void MakeFigureMove(GameObject targetCell)
+        private void MakeFigureMove(BoardCellsParams targetCell)
         {
-            BoardCellsParams boardCellsParams = targetCell.GetComponent<BoardCellsParams>();
 
-            FigureParams figureOnCell = GetFigureOnCell(boardCellsParams);
+            FigureParams figureOnCell = GetFigureOnCell(targetCell);
             string newPosition;
 
             if (figureOnCell != null && figureOnCell.TeamColor != SelectedFigure.TeamColor)
@@ -184,7 +182,7 @@ namespace VoiceChess.Example.Manager
             }
             else
             {
-                newPosition = boardCellsParams.NameOfCell;
+                newPosition = targetCell.NameOfCell;
             }
 
             if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))

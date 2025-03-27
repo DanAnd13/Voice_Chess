@@ -7,8 +7,8 @@ namespace VoiceChess.Example.CameraMoves
         private float _moveDuration = 1.5f;
         private static Transform _mainCamera;
         private static bool _isWhiteTurn = true;
-        private static float _whiteZPosition = -5.59f;
-        private static float _blackZPosition = 8f;
+        private static float _whiteZPosition = -2.73f;
+        private static float _blackZPosition = 5.71f;
         private static Quaternion _whiteRotation;
         private static Quaternion _blackRotation;
 
