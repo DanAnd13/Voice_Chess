@@ -2,16 +2,20 @@
 using UnityEngine;
 using HuggingFace.API;
 using System.Text.RegularExpressions;
+using System.Collections;
 
 namespace VoiceChess.SpeechRecognition
 {
     public class SpeechToText : MonoBehaviour
     {
+        public string RecognizedText { get; private set; } = ""; // 🔹 Додаємо змінну для тексту
+
         private AudioClip _clip;
         private byte[] _bytes;
         private bool _isRecording;
-
-        public string RecognizedText { get; private set; } = ""; // 🔹 Додаємо змінну для тексту
+        private string _figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private string _figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private string _positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
 
         private void Update()
         {
@@ -136,32 +140,46 @@ namespace VoiceChess.SpeechRecognition
 
         private string PatternAnalyzer(string text)
         {
-            //Debug.Log($"Processed text: '{text}'");
-            string figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
-            string figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
-            string positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
 
             Match match;
 
-            match = Regex.Match(text, figurePositionPositionPattern, RegexOptions.IgnoreCase);
+            match = Regex.Match(text, _figurePositionPositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                return $"Detected Move: {match.Groups[1].Value} from {match.Groups[2].Value}{match.Groups[3].Value} to {match.Groups[4].Value}{match.Groups[5].Value}";
+                return ResultOfRecording(match);
             }
 
-            match = Regex.Match(text, positionPositionPattern, RegexOptions.IgnoreCase);
+            match = Regex.Match(text, _positionPositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                return $"Detected Move: from {match.Groups[1].Value}{match.Groups[2].Value} to {match.Groups[3].Value}{match.Groups[4].Value}";
+                return ResultOfRecording(match);
             }
 
-            match = Regex.Match(text, figurePositionPattern, RegexOptions.IgnoreCase);
+            match = Regex.Match(text, _figurePositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                return $"Detected Move: {match.Groups[1].Value} to {match.Groups[2].Value}{match.Groups[3].Value}";
+                return ResultOfRecording(match);
             }
 
             return "Unrecognized command. Try again.";
+        }
+
+        private string ResultOfRecording(Match match)
+        {
+            if (match.Groups.Count == 6) // Фігура + початкова і кінцева позиція
+            {
+                return $"{match.Groups[1].Value} {match.Groups[2].Value}{match.Groups[3].Value} {match.Groups[4].Value}{match.Groups[5].Value}";
+            }
+            else if (match.Groups.Count == 5) // Тільки позиції (без фігури)
+            {
+                return $"{match.Groups[1].Value}{match.Groups[2].Value} {match.Groups[3].Value}{match.Groups[4].Value}";
+            }
+            else if (match.Groups.Count == 4) // Тільки фігура + кінцева позиція
+            {
+                return $"{match.Groups[1].Value} {match.Groups[2].Value}{match.Groups[3].Value}";
+            }
+
+            return "Invalid move format.";
         }
     }
 }

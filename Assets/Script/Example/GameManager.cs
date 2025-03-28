@@ -61,6 +61,18 @@ namespace VoiceChess.Example.Manager
             return null;
         }
 
+        public static bool IsItDifferentTeamByColor(FigureParams.TypeOfTeam selectedFigure, FigureParams.TypeOfTeam enemyFigure)
+        {
+            try
+            {
+                return selectedFigure != enemyFigure;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
 
         private void HandleClick()
         {
@@ -87,7 +99,7 @@ namespace VoiceChess.Example.Manager
                     else
                     {
 
-                        if (CanAttack(clickedFigure))
+                        if (IsItDifferentTeamByColor(SelectedFigure.TeamColor, clickedFigure.TeamColor))
                         {
 
                             string attackedFigurePosition = clickedFigure.CurrentPosition;
@@ -123,7 +135,7 @@ namespace VoiceChess.Example.Manager
             SelectedFigure = figure;
             SelectedFigure.transform.position += Vector3.up * 0.5f;
 
-            List<GameObject> validMoves = GetValidMoveCells(figure);
+            List<BoardCellsParams> validMoves = GetValidMoveCells(figure);
             HighlightCells.PaintCells(validMoves, isHighlight: true);
         }
 
@@ -139,9 +151,9 @@ namespace VoiceChess.Example.Manager
             HighlightCells.HighlightedCellsObjects.Clear();
         }
 
-        private List<GameObject> GetValidMoveCells(FigureParams figure)
+        private List<BoardCellsParams> GetValidMoveCells(FigureParams figure)
         {
-            List<GameObject> validCells = new List<GameObject>();
+            List<BoardCellsParams> validCells = new List<BoardCellsParams>();
 
             foreach (BoardCellsParams cell in BoardCells)
             {
@@ -150,7 +162,7 @@ namespace VoiceChess.Example.Manager
 
                 if (CheckValidMove(destinationSquare, figure, cellName))
                 {
-                    validCells.Add(cell.CellObject);
+                    validCells.Add(cell);
                 }
             }
             return validCells;
@@ -176,7 +188,7 @@ namespace VoiceChess.Example.Manager
             FigureParams figureOnCell = GetFigureOnCell(targetCell);
             string newPosition;
 
-            if (figureOnCell != null && figureOnCell.TeamColor != SelectedFigure.TeamColor)
+            if (figureOnCell != null && IsItDifferentTeamByColor(figureOnCell.TeamColor, SelectedFigure.TeamColor))
             {
                 newPosition = figureOnCell.CurrentPosition;
             }
@@ -192,20 +204,6 @@ namespace VoiceChess.Example.Manager
                     CameraMovement.SwitchCameraPosition();
                     DeselectFigure();
                 });
-            }
-        }
-
-
-
-        private bool CanAttack(FigureParams enemyFigure)
-        {
-            try
-            {
-                return SelectedFigure.TeamColor != enemyFigure.TeamColor;
-            }
-            catch
-            {
-                return false;
             }
         }
     }

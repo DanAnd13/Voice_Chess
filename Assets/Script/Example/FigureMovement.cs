@@ -1,6 +1,8 @@
+using ChessSharp;
 using System.Collections;
 using UnityEngine;
 using VoiceChess.BoardCellsParameters;
+using VoiceChess.Example.Manager;
 using VoiceChess.FigureParameters;
 
 namespace VoiceChess.Example.FigureMoves
@@ -27,7 +29,7 @@ namespace VoiceChess.Example.FigureMoves
 
         public static void MovingObject(string newPosition, BoardCellsParams targetCell, FigureParams selectedFigure, System.Action onComplete)
         {
-            Vector3 newPositionInWorld = targetCell.CellObject.transform.position;
+            Vector3 newPositionInWorld = targetCell.gameObject.transform.position;
             newPositionInWorld.y = selectedFigure.transform.position.y;
             selectedFigure.StartCoroutine(MoveObjectSmoothly(selectedFigure, newPositionInWorld, onComplete));
         }
@@ -35,21 +37,35 @@ namespace VoiceChess.Example.FigureMoves
 
         public static void CaptureFigure(FigureParams capturedFigure, Transform blackCapturedArea, Transform whiteCapturedArea)
         {
-            Transform captureArea = (capturedFigure.TeamColor == FigureParams.TypeOfTeam.WhiteTeam) ?
-                blackCapturedArea : whiteCapturedArea;
-
-            capturedFigure.transform.SetParent(captureArea);
-            capturedFigure.transform.position = GetNextCapturePosition(captureArea);
-
-            //capturedFigure.PreviousPosition = capturedFigure.CurrentPosition;
+            Transform captureArea;
+            FigureParams.TypeOfTeam typeOfTeam;
+            if (capturedFigure.TeamColor == FigureParams.TypeOfTeam.WhiteTeam)
+            {
+                captureArea = blackCapturedArea;
+                typeOfTeam = FigureParams.TypeOfTeam.BlackTeam;
+            }
+            else
+            {
+                captureArea = whiteCapturedArea;
+                typeOfTeam = FigureParams.TypeOfTeam.WhiteTeam;
+            }
+             
+            capturedFigure.transform.position = GetNextCapturePosition(captureArea, typeOfTeam);
             capturedFigure.Status = FigureParams.TypeOfStatus.OffGame;
         }
 
 
 
-        private static Vector3 GetNextCapturePosition(Transform captureArea)
+        private static Vector3 GetNextCapturePosition(Transform captureArea, FigureParams.TypeOfTeam typeOfTeam)
         {
-            int capturedCount = captureArea.childCount;
+            int capturedCount = 0;
+            foreach (FigureParams figureParams in GameManager.Figures)
+            {
+                if (figureParams.Status == FigureParams.TypeOfStatus.OffGame && figureParams.TeamColor != typeOfTeam)
+                {
+                    capturedCount++;
+                }
+            }
             float offset = 0.5f; // Відстань між фігурами
 
             return captureArea.position + new Vector3(capturedCount * offset, 0, 0);

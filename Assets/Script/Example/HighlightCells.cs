@@ -1,7 +1,5 @@
 ﻿using ChessSharp;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using VoiceChess.BoardCellsParameters;
 using VoiceChess.Example.Manager;
@@ -12,11 +10,9 @@ namespace VoiceChess.Example.PaintingCells
     public class HighlightCells : MonoBehaviour
     {
         [HideInInspector]
-        public static List<GameObject> HighlightedCellsObjects = new List<GameObject>();
+        public static List<BoardCellsParams> HighlightedCellsObjects = new List<BoardCellsParams>();
 
-        private static BoardCellsParams _boardCellsParams;
-
-        public static void PaintCells(List<GameObject> cellsObjects, bool isHighlight)
+        public static void PaintCells(List<BoardCellsParams> cellsObjects, bool isHighlight)
         {
             string gameState = GameManager.MoveManager.UpdateGameState();
 
@@ -35,17 +31,17 @@ namespace VoiceChess.Example.PaintingCells
 
         private static void FindKingCell(string gameState)
         {
-            GameObject kingCellObject = null;
-            FigureParams.TypeOfTeam teamInCheck;
+            BoardCellsParams kingCellObject = null;
+            FigureParams.TypeOfTeam teamInCheckColor;
 
             // Визначаємо, яка команда під шахом
             if (gameState == GameState.WhiteInCheck.ToString())
             {
-                teamInCheck = FigureParams.TypeOfTeam.WhiteTeam;
+                teamInCheckColor = FigureParams.TypeOfTeam.WhiteTeam;
             }
             else if (gameState == GameState.BlackInCheck.ToString())
             {
-                teamInCheck = FigureParams.TypeOfTeam.BlackTeam;
+                teamInCheckColor = FigureParams.TypeOfTeam.BlackTeam;
             }
             else
             {
@@ -57,62 +53,64 @@ namespace VoiceChess.Example.PaintingCells
             // Знаходимо короля саме тієї команди, що під шахом
             foreach (FigureParams figure in GameManager.Figures)
             {
-                if (figure.Type == FigureParams.TypeOfFigure.King && figure.TeamColor == teamInCheck)
+                if (figure.Type == FigureParams.TypeOfFigure.King && figure.TeamColor == teamInCheckColor)
                 {
-                    kingCellObject = GameManager.BoardCells.Find(cell => cell.NameOfCell == figure.CurrentPosition).gameObject;
-                    break; // Зупиняємо пошук, як тільки знайшли
+                    kingCellObject = GameManager.BoardCells.Find(cell => cell.NameOfCell == figure.CurrentPosition);
+                    break;
                 }
             }
 
             // Підсвічуємо клітинку короля, якщо знайшли
             if (kingCellObject != null)
             {
-                Renderer kingCellRenderer = kingCellObject.GetComponent<Renderer>();
-                if (kingCellRenderer != null)
-                {
-                    kingCellRenderer.material.color = Color.red;
-                }
+                PaintingCellInColor(kingCellObject, Color.red);
             }
         }
 
 
-        private static void ShowingPossibleMoves(List<GameObject> cells, bool isHighlight)
+        private static void ShowingPossibleMoves(List<BoardCellsParams> cells, bool isHighlight)
         {
-            foreach (GameObject cell in cells)
+            foreach (BoardCellsParams cell in cells)
             {
-                Renderer cellRenderer = cell.GetComponent<Renderer>();
-                _boardCellsParams = cell.GetComponent<BoardCellsParams>();
-
-                if (cellRenderer != null)
+                if (cell.CellRenderer != null)
                 {
                     if (isHighlight)
                     {
-                        FigureParams figureOnCell = GameManager.GetFigureOnCell(_boardCellsParams);
+                        FigureParams figureOnCell = GameManager.GetFigureOnCell(cell);
 
-                        if (figureOnCell != null && figureOnCell.Status == FigureParams.TypeOfStatus.OnGame && figureOnCell.TeamColor != GameManager.SelectedFigure.TeamColor)
+                        if (figureOnCell != null && figureOnCell.Status == FigureParams.TypeOfStatus.OnGame && 
+                            GameManager.IsItDifferentTeamByColor(figureOnCell.TeamColor, GameManager.SelectedFigure.TeamColor))
                         {
-                            cellRenderer.material.color = new Color(1f, 0.647f, 0f);
+                            PaintingCellInColor(cell, new Color(1f, 0.647f, 0f));
+                            //cell.CellRenderer.material.color = new Color(1f, 0.647f, 0f);
                         }
                         else
                         {
-                            cellRenderer.material.color = Color.green;
+                            PaintingCellInColor(cell, Color.green);
+                            //cell.CellRenderer.material.color = Color.green;
                         }
 
-                        HighlightedCellsObjects.Add(cell.gameObject);
+                        HighlightedCellsObjects.Add(cell);
                     }
                 }
             }
         }
 
+        private static void PaintingCellInColor(BoardCellsParams boardCells, Color newColor)
+        {
+            if (boardCells.CellRenderer != null)
+            {
+                boardCells.CellRenderer.material.color = newColor;
+            }
+        }
 
         private static void UpdateCellsColor()
         {
             foreach (var cell in GameManager.BoardCells)
             {
-                BoardCellsParams cellParams = cell.GetComponent<BoardCellsParams>();
-                if (cellParams != null && cellParams.ColorOfCell != null)
+                if (cell != null && cell.ColorOfCell != null)
                 {
-                    cell.GetComponent<Renderer>().material.color = cellParams.ColorOfCell;
+                    cell.GetComponent<Renderer>().material.color = cell.ColorOfCell;
                 }
             }
         }
