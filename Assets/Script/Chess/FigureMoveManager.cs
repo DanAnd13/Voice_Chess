@@ -29,14 +29,9 @@ namespace VoiceChess.MoveFigureManager
             return _lastMoveResult;
         }
 
-        private GameBoard GetGameBoard()
-        {
-            return Board;
-        }
         public string UpdateGameState()
         {
             string currentGameState;
-            Board = GetGameBoard();
             GameState currentState = Board.GameState;
             currentGameState = currentState.ToString();
             return currentGameState;
@@ -61,7 +56,7 @@ namespace VoiceChess.MoveFigureManager
                     bool matchByName = !string.IsNullOrWhiteSpace(figureName) && figure.Type.ToString() == figureName;
                     bool matchByPosition = !string.IsNullOrWhiteSpace(currentPosition) && figure.CurrentPosition == currentPosition;
 
-                    if ((matchByName || matchByPosition) && figure.Status == FigureParams.TypeOfStatus.OnGame)
+                    if ((matchByName && matchByPosition) && figure.Status == FigureParams.TypeOfStatus.OnGame)
                     {
                         if (CreateMoveAtributes(destinationSquare, figure, newPosition))
                         {

@@ -6,7 +6,7 @@ namespace VoiceChess.Example.CameraMoves
     {
         private float _moveDuration = 1.5f;
         private static Transform _mainCamera;
-        private static bool _isWhiteTurn = true;
+        private static bool _isWhiteTurn;
         private static float _whiteZPosition = -2.73f;
         private static float _blackZPosition = 5.71f;
         private static Quaternion _whiteRotation;
@@ -24,6 +24,7 @@ namespace VoiceChess.Example.CameraMoves
 
         private void Start()
         {
+            _isWhiteTurn = true;
             _whiteRotation = _mainCamera.rotation;
             _blackRotation = Quaternion.Euler(0, 180, 0) * _whiteRotation;
 

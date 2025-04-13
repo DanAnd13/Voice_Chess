@@ -31,6 +31,8 @@ namespace VoiceChess.Example.Manager
 
         private void Awake()
         {
+            BoardCells.Clear();
+
             MoveManager = FigureMoveManager;
 
             Figures = FigureMoveManager.Figures;
@@ -101,10 +103,8 @@ namespace VoiceChess.Example.Manager
 
                         if (IsItDifferentTeamByColor(SelectedFigure.TeamColor, clickedFigure.TeamColor))
                         {
-
                             string attackedFigurePosition = clickedFigure.CurrentPosition;
                             clickedCell = BoardCells.Find(cell => cell.NameOfCell == attackedFigurePosition);
-
                             if (clickedCell != null)
                             {
                                 
