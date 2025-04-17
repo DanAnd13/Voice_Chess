@@ -9,6 +9,11 @@ using ChessSharp;
 using ChessSharp.SquareData;
 using VoiceChess.BoardCellsParameters;
 using UnityEditor.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
+using VoiceChess.SpeechRecognition;
+using System.Linq;
+using System;
 
 namespace VoiceChess.Example.Manager
 {
@@ -19,6 +24,11 @@ namespace VoiceChess.Example.Manager
         public Transform ParentBoard;
         public Transform WhiteCapturedArea; // Позиція для вибитих чорних фігур
         public Transform BlackCapturedArea; // Позиція для вибитих білих фігур
+        public TextMeshProUGUI HistoryField;
+        public TextMeshProUGUI ResultOfRecordingField;
+        public Button StartRecordingButton;
+        public Button StopRecordingButton;
+        public GameObject RecordingWindow;
 
         [HideInInspector]
         public static FigureMoveManager MoveManager;
@@ -41,6 +51,10 @@ namespace VoiceChess.Example.Manager
             {
                 BoardCells.Add(cell.gameObject.GetComponent<BoardCellsParams>());
             }
+
+            StartRecordingButton.onClick.AddListener(SpeechToText.StartRecording);
+            StopRecordingButton.onClick.AddListener(SpeechToText.StopRecording);
+            SpeechToText.OnMoveParsed += HandleVoiceMove;
         }
 
         private void Update()
@@ -75,7 +89,6 @@ namespace VoiceChess.Example.Manager
             }
         }
 
-
         private void HandleClick()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -107,8 +120,6 @@ namespace VoiceChess.Example.Manager
                             clickedCell = BoardCells.Find(cell => cell.NameOfCell == attackedFigurePosition);
                             if (clickedCell != null)
                             {
-                                
-                                FigureMovement.CaptureFigure(clickedFigure, BlackCapturedArea, WhiteCapturedArea);
                                 MakeFigureMove(clickedCell);
                             }
                         }
@@ -190,6 +201,7 @@ namespace VoiceChess.Example.Manager
 
             if (figureOnCell != null && IsItDifferentTeamByColor(figureOnCell.TeamColor, SelectedFigure.TeamColor))
             {
+                FigureMovement.CaptureFigure(figureOnCell, BlackCapturedArea, WhiteCapturedArea);
                 newPosition = figureOnCell.CurrentPosition;
             }
             else
@@ -199,12 +211,63 @@ namespace VoiceChess.Example.Manager
 
             if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))
             {
+                HistoryField.text = WriteHistoryField(SelectedFigure.Type.ToString(), SelectedFigure.PreviousPosition, SelectedFigure.CurrentPosition);
                 FigureMovement.MovingObject(newPosition, targetCell, SelectedFigure, () =>
                 {
                     CameraMovement.SwitchCameraPosition();
                     DeselectFigure();
                 });
             }
+        }
+
+        private void HandleVoiceMove(FigureMoveParams move)
+        {
+            Debug.Log("🎙️ HandleVoiceMove викликано");
+            ResultOfRecordingField.text = SpeechToText.RecognizedText;
+
+            BoardCellsParams targetCell = BoardCells.Find(cell =>
+                                          string.Equals(cell.NameOfCell, move.NewPosition, StringComparison.OrdinalIgnoreCase));
+
+            FigureParams figureToMove = null;
+
+            switch (move.TypeOfPattern)
+            {
+                case "FigureFromTo":
+                    figureToMove = Figures.FirstOrDefault(f =>
+                        f.Type.ToString().ToLower() == move.FigureName.ToLower() &&
+                        f.CurrentPosition.Equals(move.CurrentPosition, StringComparison.OrdinalIgnoreCase));
+                    break;
+
+                case "FromTo":
+                    figureToMove = Figures.FirstOrDefault(f =>
+                        f.CurrentPosition.Equals(move.CurrentPosition, StringComparison.OrdinalIgnoreCase));
+                    break;
+
+                case "FigureToPos":
+                    figureToMove = Figures.FirstOrDefault(f =>
+                        f.Type.ToString().ToLower() == move.FigureName.ToLower() &&
+                        f.CurrentPosition.Equals(move.CurrentPosition, StringComparison.OrdinalIgnoreCase));
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (figureToMove != null)
+            {
+
+                SelectedFigure = figureToMove;
+                MakeFigureMove(targetCell);
+            }
+            RecordingWindow.SetActive(false);
+        }
+
+
+        private string WriteHistoryField(string typeOfFigure, string previousPosition, string currentPosition)
+        {
+            string value = HistoryField.text;
+            value += $"{typeOfFigure} - {previousPosition} - {currentPosition}\n";
+            return value;
         }
     }
 }

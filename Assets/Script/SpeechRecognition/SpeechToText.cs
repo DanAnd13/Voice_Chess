@@ -3,19 +3,23 @@ using UnityEngine;
 using HuggingFace.API;
 using System.Text.RegularExpressions;
 using System.Collections;
+using System;
 
 namespace VoiceChess.SpeechRecognition
 {
     public class SpeechToText : MonoBehaviour
     {
-        public string RecognizedText { get; private set; } = ""; // 🔹 Додаємо змінну для тексту
+        public static FigureMoveParams? LastParsedMove { get; private set; } = null;
+        public static string RecognizedText { get; private set; } = ""; // 🔹 Додаємо змінну для тексту
 
-        private AudioClip _clip;
-        private byte[] _bytes;
-        private bool _isRecording;
-        private string _figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
-        private string _figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
-        private string _positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        public static event Action<FigureMoveParams> OnMoveParsed;
+
+        private static AudioClip _clip;
+        private static byte[] _bytes;
+        private static bool _isRecording;
+        private static string _figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private static string _figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private static string _positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
 
         private void Update()
         {
@@ -25,13 +29,13 @@ namespace VoiceChess.SpeechRecognition
             }
         }
 
-        public void StartRecording()
+        public static void StartRecording()
         {
             _clip = Microphone.Start(null, false, 10, 44100);
             _isRecording = true;
         }
 
-        public void StopRecording()
+        public static void StopRecording()
         {
             var position = Microphone.GetPosition(null);
             if (position <= 0) return;
@@ -45,18 +49,19 @@ namespace VoiceChess.SpeechRecognition
             SendRecording();
         }
 
-        private void SendRecording()
+        private static void SendRecording()
         {
             HuggingFaceAPI.AutomaticSpeechRecognition(_bytes, response =>
             {
-                RecognizedText = TextCorrection(response); // 🔹 Оновлюємо RecognizedText
+                RecognizedText = ReplacementOfMistakes(response);
+                PatternAnalyzer(RecognizedText);
             }, error =>
             {
                 RecognizedText = "Error: " + error;
             });
         }
 
-        private byte[] EncodeAsWAV(float[] samples, int frequency, int channels)
+        private static byte[] EncodeAsWAV(float[] samples, int frequency, int channels)
         {
             using (var memoryStream = new MemoryStream(44 + samples.Length * 2))
             {
@@ -85,14 +90,14 @@ namespace VoiceChess.SpeechRecognition
             }
         }
 
-        private string TextCorrection(string text)
+        private static string TextCorrection(string text)
         {
-            //Debug.Log($"Raw speech text: '{text}'");
             text = ReplacementOfMistakes(text);
-            return PatternAnalyzer(text);
+            var result = PatternAnalyzer(text); // саме тут буде виклик події
+            return result;
         }
 
-        private string ReplacementOfMistakes(string text)
+        private static string ReplacementOfMistakes(string text)
         {
             return text.ToLower().Trim()
                 .Replace("for", "four")
@@ -118,6 +123,7 @@ namespace VoiceChess.SpeechRecognition
                 .Replace("bown", "pawn")
                 .Replace("boun", "pawn")
                 .Replace("pawnd", "pawn")
+                .Replace("powng", "pawn")
                 .Replace("pound", "pawn")
                 .Replace("night", "knight")
                 .Replace("nite", "knight")
@@ -138,48 +144,61 @@ namespace VoiceChess.SpeechRecognition
                 .Replace("bshop", "bishop");
         }
 
-        private string PatternAnalyzer(string text)
+        private static string PatternAnalyzer(string text)
         {
-
             Match match;
 
             match = Regex.Match(text, _figurePositionPositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                return ResultOfRecording(match);
+                return CreateMoveParams(match, "FigureFromTo");
             }
 
             match = Regex.Match(text, _positionPositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                return ResultOfRecording(match);
+                return CreateMoveParams(match, "FromTo");
             }
 
             match = Regex.Match(text, _figurePositionPattern, RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                return ResultOfRecording(match);
+                return CreateMoveParams(match, "FigureToPos");
             }
 
             return "Unrecognized command. Try again.";
         }
 
-        private string ResultOfRecording(Match match)
+        private static string CreateMoveParams(Match match, string patternType)
         {
-            if (match.Groups.Count == 6) // Фігура + початкова і кінцева позиція
+            var moveParams = new FigureMoveParams();
+
+            switch (patternType)
             {
-                return $"{match.Groups[1].Value} {match.Groups[2].Value}{match.Groups[3].Value} {match.Groups[4].Value}{match.Groups[5].Value}";
-            }
-            else if (match.Groups.Count == 5) // Тільки позиції (без фігури)
-            {
-                return $"{match.Groups[1].Value}{match.Groups[2].Value} {match.Groups[3].Value}{match.Groups[4].Value}";
-            }
-            else if (match.Groups.Count == 4) // Тільки фігура + кінцева позиція
-            {
-                return $"{match.Groups[1].Value} {match.Groups[2].Value}{match.Groups[3].Value}";
+                case "FigureFromTo":
+                    moveParams.FigureName = match.Groups[1].Value;
+                    moveParams.CurrentPosition = $"{match.Groups[2].Value}{match.Groups[3].Value}";
+                    moveParams.NewPosition = $"{match.Groups[4].Value}{match.Groups[5].Value}";
+                    break;
+
+                case "FromTo":
+                    moveParams.FigureName = "";
+                    moveParams.CurrentPosition = $"{match.Groups[1].Value}{match.Groups[2].Value}";
+                    moveParams.NewPosition = $"{match.Groups[3].Value}{match.Groups[4].Value}";
+                    break;
+
+                case "FigureToPos":
+                    moveParams.FigureName = match.Groups[1].Value;
+                    moveParams.CurrentPosition = ""; // немає
+                    moveParams.NewPosition = $"{match.Groups[2].Value}{match.Groups[3].Value}";
+                    break;
             }
 
-            return "Invalid move format.";
+            moveParams.TypeOfPattern = patternType;
+
+            LastParsedMove = moveParams;
+            OnMoveParsed?.Invoke(moveParams); // 🔸 Виклик події
+            return $"{moveParams.FigureName} {moveParams.CurrentPosition} {moveParams.NewPosition}";
         }
     }
 }
