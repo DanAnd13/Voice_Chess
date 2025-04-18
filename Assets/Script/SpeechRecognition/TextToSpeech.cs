@@ -4,21 +4,22 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine.Profiling;
+using TMPro.EditorUtilities;
 
 namespace VoiceChess.Speaking
 {
     public class TextToSpeech : MonoBehaviour
     {
         // Змінна для отримання тексту з Editor Script
-        private string inputText = "Default text.";
+        private static string _inputText = "Default text.";
+        private static bool _hasPhonemeDictionary = true;
+        private static Dictionary<string, string> _dictionary = new();
+        private static Worker _engine;
+        private static AudioClip _clip;
+        private static AudioSource _audioSource;
+        private static Stopwatch stopwatch = new Stopwatch();
 
-        private bool _hasPhonemeDictionary = true;
-        private Dictionary<string, string> _dictionary = new();
-        private Worker _engine;
-        private AudioClip _clip;
-        private Stopwatch stopwatch = new Stopwatch();
-
-        private readonly string[] _phonemes = new string[]
+        private static readonly string[] _phonemes = new string[]
         {
             "<blank>", "<unk>", "AH0", "N", "T", "D", "S", "R", "L", "DH", "K", "Z", "IH1",
             "IH0", "M", "EH1", "W", "P", "AE1", "AH1", "V", "ER0", "F", ",", "AA1", "B",
@@ -42,13 +43,14 @@ namespace VoiceChess.Speaking
             _engine?.Dispose();
         }
 
-        public void SetTextAndSpeak(string text)
+        public static void SetTextAndSpeak(string text, AudioSource audioSource)
         {
-            inputText = text;
+            _inputText = text;
+            _audioSource = audioSource;
             PlayText();
         }
 
-        private void PlayText()
+        private static void PlayText()
         {
             stopwatch.Reset();
             stopwatch.Start();
@@ -89,12 +91,12 @@ namespace VoiceChess.Speaking
             _dictionary.TryAdd("\"", "\"");
         }
 
-        private void SpeakingByText()
+        private static void SpeakingByText()
         {
             string phonemeText;
             if (_hasPhonemeDictionary)
             {
-                phonemeText = TextToPhonemes(inputText);
+                phonemeText = TextToPhonemes(_inputText);
                 UnityEngine.Debug.Log(phonemeText);
             }
             else
@@ -105,7 +107,7 @@ namespace VoiceChess.Speaking
             DoInference(phonemeText);
         }
 
-        private string TextToPhonemes(string text)
+        private static string TextToPhonemes(string text)
         {
             string outputText = "";
             text = ExpandNumbers(text).ToUpper();
@@ -118,7 +120,7 @@ namespace VoiceChess.Speaking
             return outputText;
         }
 
-        private string DecodeWord(string word)
+        private static string DecodeWord(string word)
         {
             string output = "";
             int start = 0;
@@ -141,7 +143,7 @@ namespace VoiceChess.Speaking
             return output;
         }
 
-        private void DoInference(string phonemeText)
+        private static void DoInference(string phonemeText)
         {
             int[] tokens = GetTokens(phonemeText);
             using var input = new Tensor<int>(new TensorShape(tokens.Length), tokens);
@@ -158,7 +160,7 @@ namespace VoiceChess.Speaking
             Speak();
         }
 
-        private int[] GetTokens(string phonemeText)
+        private static int[] GetTokens(string phonemeText)
         {
             string[] words = phonemeText.Split();
             var tokens = new int[words.Length];
@@ -169,13 +171,13 @@ namespace VoiceChess.Speaking
             return tokens;
         }
 
-        private void Speak()
+        private static void Speak()
         {
-            AudioSource audioSource = GetComponent<AudioSource>();
-            if (audioSource != null)
+            //AudioSource audioSource = GetComponent<AudioSource>();
+            if (_audioSource != null)
             {
-                audioSource.clip = _clip;
-                audioSource.Play();
+                _audioSource.clip = _clip;
+                _audioSource.Play();
             }
             else
             {
@@ -183,7 +185,7 @@ namespace VoiceChess.Speaking
             }
         }
 
-        private string ExpandNumbers(string text)
+        private static string ExpandNumbers(string text)
         {
             return text
                 .Replace("0", " ZERO ")

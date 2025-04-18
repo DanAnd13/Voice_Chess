@@ -8,10 +8,10 @@ using VoiceChess.Example.FigureMoves;
 using ChessSharp;
 using ChessSharp.SquareData;
 using VoiceChess.BoardCellsParameters;
-using UnityEditor.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
 using VoiceChess.SpeechRecognition;
+using VoiceChess.Speaking;
 using System.Linq;
 using System;
 
@@ -29,6 +29,7 @@ namespace VoiceChess.Example.Manager
         public Button StartRecordingButton;
         public Button StopRecordingButton;
         public GameObject RecordingWindow;
+        public AudioSource AudioPlayer;
 
         [HideInInspector]
         public static FigureMoveManager MoveManager;
@@ -113,16 +114,12 @@ namespace VoiceChess.Example.Manager
                     }
                     else
                     {
-
-                        if (IsItDifferentTeamByColor(SelectedFigure.TeamColor, clickedFigure.TeamColor))
-                        {
                             string attackedFigurePosition = clickedFigure.CurrentPosition;
                             clickedCell = BoardCells.Find(cell => cell.NameOfCell == attackedFigurePosition);
                             if (clickedCell != null)
                             {
                                 MakeFigureMove(clickedCell);
                             }
-                        }
                     }
                 }
 
@@ -201,7 +198,6 @@ namespace VoiceChess.Example.Manager
 
             if (figureOnCell != null && IsItDifferentTeamByColor(figureOnCell.TeamColor, SelectedFigure.TeamColor))
             {
-                FigureMovement.CaptureFigure(figureOnCell, BlackCapturedArea, WhiteCapturedArea);
                 newPosition = figureOnCell.CurrentPosition;
             }
             else
@@ -211,18 +207,42 @@ namespace VoiceChess.Example.Manager
 
             if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))
             {
+                if (figureOnCell != null)
+                {
+                    FigureMovement.CaptureFigure(figureOnCell, BlackCapturedArea, WhiteCapturedArea);
+                }
                 HistoryField.text = WriteHistoryField(SelectedFigure.Type.ToString(), SelectedFigure.PreviousPosition, SelectedFigure.CurrentPosition);
+                
+                string audioText = $"{SelectedFigure.Type} {SelectedFigure.PreviousPosition} {SelectedFigure.CurrentPosition}";
+                if (AudioPlayer == null)
+                {
+                    Debug.LogError("AudioPlayer is null!");
+                }
+                else
+                {
+                    TextToSpeech.SetTextAndSpeak(audioText, AudioPlayer);
+                }
+                if (FigureMoveManager.Board.GameState != GameState.NotCompleted)
+                {
+                    TextToSpeech.SetTextAndSpeak(FigureMoveManager.Board.GameState.ToString(), AudioPlayer);
+                }
+
                 FigureMovement.MovingObject(newPosition, targetCell, SelectedFigure, () =>
                 {
+                    RecordingWindow.SetActive(false);
                     CameraMovement.SwitchCameraPosition();
                     DeselectFigure();
                 });
+            }
+            else
+            {
+                ResultOfRecordingField.text = "Move is not posible";
+                DeselectFigure();
             }
         }
 
         private void HandleVoiceMove(FigureMoveParams move)
         {
-            Debug.Log("🎙️ HandleVoiceMove викликано");
             ResultOfRecordingField.text = SpeechToText.RecognizedText;
 
             BoardCellsParams targetCell = BoardCells.Find(cell =>
@@ -244,10 +264,24 @@ namespace VoiceChess.Example.Manager
                     break;
 
                 case "FigureToPos":
-                    figureToMove = Figures.FirstOrDefault(f =>
-                        f.Type.ToString().ToLower() == move.FigureName.ToLower() &&
-                        f.CurrentPosition.Equals(move.CurrentPosition, StringComparison.OrdinalIgnoreCase));
-                    break;
+                    {
+                        Square targetSquare = Square.Parse(move.NewPosition);
+                        var candidateFigures = Figures.Where(f =>
+                            f.Type.ToString().ToLower() == move.FigureName.ToLower() &&
+                            IsFigureBelongsToCurrentPlayer(f,FigureMoveManager.Board.WhoseTurn()));
+
+                        foreach (var candidate in candidateFigures)
+                        {
+                            Square currentSquare = Square.Parse(candidate.CurrentPosition);
+                            Move potentialMove = new Move(currentSquare, targetSquare, FigureMoveManager.Board.WhoseTurn());
+                            if (FigureMoveManager.Board.IsValidMove(potentialMove))
+                            {
+                                figureToMove = candidate;
+                                break;
+                            }
+                        }
+                        break;
+                    }
 
                 default:
                     break;
@@ -255,13 +289,11 @@ namespace VoiceChess.Example.Manager
 
             if (figureToMove != null)
             {
-
+                SelectFigure(figureToMove);
                 SelectedFigure = figureToMove;
                 MakeFigureMove(targetCell);
             }
-            RecordingWindow.SetActive(false);
         }
-
 
         private string WriteHistoryField(string typeOfFigure, string previousPosition, string currentPosition)
         {

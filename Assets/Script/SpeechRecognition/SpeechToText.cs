@@ -90,13 +90,6 @@ namespace VoiceChess.SpeechRecognition
             }
         }
 
-        private static string TextCorrection(string text)
-        {
-            text = ReplacementOfMistakes(text);
-            var result = PatternAnalyzer(text); // саме тут буде виклик події
-            return result;
-        }
-
         private static string ReplacementOfMistakes(string text)
         {
             return text.ToLower().Trim()

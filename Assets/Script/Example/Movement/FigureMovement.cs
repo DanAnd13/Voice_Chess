@@ -41,7 +41,7 @@ namespace VoiceChess.Example.FigureMoves
             float currentY = selectedFigure.transform.position.y;
 
             // Отримуємо нову позицію клітинки
-            Vector3 newPositionInWorld = targetCell.CellPrefab.transform.position;
+            Vector3 newPositionInWorld = targetCell.gameObject.transform.position;
 
             // Встановлюємо Y на збережене значення
             newPositionInWorld.y = currentY;

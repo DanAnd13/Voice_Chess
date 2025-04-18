@@ -17,16 +17,10 @@ namespace VoiceChess.MoveFigureManager
         public GameBoard Board;
 
         private bool _moveSuccessful = false;
-        private string _lastMoveResult = "";
 
         private void Awake()
         {
             Board = new GameBoard();
-        }
-
-        public string GetLastMoveResult()
-        {
-            return _lastMoveResult;
         }
 
         public string UpdateGameState()
@@ -98,12 +92,10 @@ namespace VoiceChess.MoveFigureManager
             {
                 figure.PreviousPosition = figure.CurrentPosition;
                 figure.CurrentPosition = newPosition;
-
-                _lastMoveResult = $"{figure.Type} moved from {figure.PreviousPosition} to {figure.CurrentPosition}";
             }
             else
             {
-                _lastMoveResult = $"Failed to execute move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.";
+                Debug.Log($"Failed to execute move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.");
             }
         }
     }

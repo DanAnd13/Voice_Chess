@@ -13,22 +13,16 @@ namespace VoiceChess.BoardCellsParameters
         public Color ColorOfCell;
         [HideInInspector]
         public Renderer CellRenderer;
-        [HideInInspector]
-        public GameObject CellPrefab;
 
         private void Awake()
         {
             NameOfCell = gameObject.name;
-
-            CellPrefab = gameObject;
 
             CellRenderer = GetComponent<Renderer>();
             if (CellRenderer != null)
             {
                 ColorOfCell = CellRenderer.material.color;
             }
-
-            Debug.Log($"🧩 Cell: {NameOfCell}, WorldPos: {transform.position}");
         }
 
     }
