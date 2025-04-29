@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 using ChessSharp;
+using UnityEngine.UI;
 using VoiceChess.MoveFigureManager;
+using VoiceChess.SpeechRecognition;
+using VoiceChess.Example.Manager;
 
 namespace VoiceChess.Example.UI
 {
@@ -13,6 +15,15 @@ namespace VoiceChess.Example.UI
     {
         public FigureMoveManager FigureMoveManager;
         public TextMeshProUGUI WhoseTurnTitle;
+        public TextMeshProUGUI ResultOfRecordingField;
+        public Button StartRecordingButton;
+        public Button StopRecordingButton;
+
+        private void Awake()
+        {
+            StartRecordingButton.onClick.AddListener(SpeechToText.StartRecording);
+            StopRecordingButton.onClick.AddListener(SpeechToText.StopRecording);
+        }
 
         private void Start()
         {
@@ -21,12 +32,23 @@ namespace VoiceChess.Example.UI
 
         private void Update()
         {
+            
+
             CurrentPlayer();
+
+            if (SpeechToText.IsGetRequest)
+            {
+                StartRecordingButton.interactable = true;
+            }
+            else
+            {
+                StartRecordingButton.interactable = false;
+            }
         }
 
-        public static void UpdateHistoryText(string currentValue, string newValue)
+        public static string UpdateHistoryText(string currentValue, string newValue)
         {
-            currentValue = currentValue + "\n" + newValue;
+            return newValue + "\n" + currentValue;
         }
 
         private void CurrentPlayer()

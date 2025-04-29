@@ -5,15 +5,16 @@ using VoiceChess.MoveFigureManager;
 using VoiceChess.Example.PaintingCells;
 using VoiceChess.Example.CameraMoves;
 using VoiceChess.Example.FigureMoves;
+using VoiceChess.Example.UI;
 using ChessSharp;
 using ChessSharp.SquareData;
 using VoiceChess.BoardCellsParameters;
 using TMPro;
-using UnityEngine.UI;
 using VoiceChess.SpeechRecognition;
 using VoiceChess.Speaking;
 using System.Linq;
 using System;
+using System.Collections;
 
 namespace VoiceChess.Example.Manager
 {
@@ -26,8 +27,6 @@ namespace VoiceChess.Example.Manager
         public Transform BlackCapturedArea; // Позиція для вибитих білих фігур
         public TextMeshProUGUI HistoryField;
         public TextMeshProUGUI ResultOfRecordingField;
-        public Button StartRecordingButton;
-        public Button StopRecordingButton;
         public GameObject RecordingWindow;
         public AudioSource AudioPlayer;
 
@@ -52,9 +51,6 @@ namespace VoiceChess.Example.Manager
             {
                 BoardCells.Add(cell.gameObject.GetComponent<BoardCellsParams>());
             }
-
-            StartRecordingButton.onClick.AddListener(SpeechToText.StartRecording);
-            StopRecordingButton.onClick.AddListener(SpeechToText.StopRecording);
             SpeechToText.OnMoveParsed += HandleVoiceMove;
         }
 
@@ -196,48 +192,65 @@ namespace VoiceChess.Example.Manager
             FigureParams figureOnCell = GetFigureOnCell(targetCell);
             string newPosition;
 
-            if (figureOnCell != null && IsItDifferentTeamByColor(figureOnCell.TeamColor, SelectedFigure.TeamColor))
+            try
             {
-                newPosition = figureOnCell.CurrentPosition;
-            }
-            else
-            {
-                newPosition = targetCell.NameOfCell;
-            }
-
-            if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))
-            {
-                if (figureOnCell != null)
+                if (figureOnCell != null && IsItDifferentTeamByColor(figureOnCell.TeamColor, SelectedFigure.TeamColor))
                 {
-                    FigureMovement.CaptureFigure(figureOnCell, BlackCapturedArea, WhiteCapturedArea);
-                }
-                HistoryField.text = WriteHistoryField(SelectedFigure.Type.ToString(), SelectedFigure.PreviousPosition, SelectedFigure.CurrentPosition);
-                
-                string audioText = $"{SelectedFigure.Type} {SelectedFigure.PreviousPosition} {SelectedFigure.CurrentPosition}";
-                if (AudioPlayer == null)
-                {
-                    Debug.LogError("AudioPlayer is null!");
+                    newPosition = figureOnCell.CurrentPosition;
                 }
                 else
                 {
-                    TextToSpeech.SetTextAndSpeak(audioText, AudioPlayer);
-                }
-                if (FigureMoveManager.Board.GameState != GameState.NotCompleted)
-                {
-                    TextToSpeech.SetTextAndSpeak(FigureMoveManager.Board.GameState.ToString(), AudioPlayer);
+                    newPosition = targetCell.NameOfCell;
                 }
 
-                FigureMovement.MovingObject(newPosition, targetCell, SelectedFigure, () =>
+                if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))
                 {
-                    RecordingWindow.SetActive(false);
-                    CameraMovement.SwitchCameraPosition();
+                    if (figureOnCell != null)
+                    {
+                        FigureMovement.CaptureFigure(figureOnCell, BlackCapturedArea, WhiteCapturedArea);
+                    }
+
+                    string textResult = SelectedFigure.Type.ToString() + " - " + SelectedFigure.PreviousPosition + " - " + SelectedFigure.CurrentPosition;
+                    HistoryField.text = UIUpdate.UpdateHistoryText(HistoryField.text, textResult);
+
+                    PlayAudio();
+
+                    FigureMovement.MovingObject(newPosition, targetCell, SelectedFigure, () =>
+                    {
+                        RecordingWindow.SetActive(false);
+                        CameraMovement.SwitchCameraPosition();
+                        DeselectFigure();
+                    });
+                }
+                else
+                {
+                    ResultOfRecordingField.text = "Move is not posible";
                     DeselectFigure();
-                });
+                }
             }
-            else
+            catch { }
+        }
+
+        private void PlayAudio()
+        {
+            StartCoroutine(PlayAudioCoroutine());
+        }
+
+        private IEnumerator PlayAudioCoroutine()
+        {
+            string moveText = $"{SelectedFigure.Type} {SelectedFigure.PreviousPosition} {SelectedFigure.CurrentPosition}";
+            TextToSpeech.SetTextAndSpeak(moveText, AudioPlayer);
+
+            // Чекаємо поки закінчиться відтворення першого аудіо
+            while (AudioPlayer.isPlaying)
             {
-                ResultOfRecordingField.text = "Move is not posible";
-                DeselectFigure();
+                yield return null;
+            }
+
+            if (FigureMoveManager.Board.GameState != GameState.NotCompleted)
+            {
+                string gameStateText = FigureMoveManager.Board.GameState.ToString();
+                TextToSpeech.SetTextAndSpeak(gameStateText, AudioPlayer);
             }
         }
 
@@ -293,13 +306,6 @@ namespace VoiceChess.Example.Manager
                 SelectedFigure = figureToMove;
                 MakeFigureMove(targetCell);
             }
-        }
-
-        private string WriteHistoryField(string typeOfFigure, string previousPosition, string currentPosition)
-        {
-            string value = HistoryField.text;
-            value += $"{typeOfFigure} - {previousPosition} - {currentPosition}\n";
-            return value;
         }
     }
 }

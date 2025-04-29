@@ -11,7 +11,7 @@ namespace VoiceChess.SpeechRecognition
     {
         public static FigureMoveParams? LastParsedMove { get; private set; } = null;
         public static string RecognizedText { get; private set; } = ""; // 🔹 Додаємо змінну для тексту
-
+        public static bool IsGetRequest = true;
         public static event Action<FigureMoveParams> OnMoveParsed;
 
         private static AudioClip _clip;
@@ -33,6 +33,7 @@ namespace VoiceChess.SpeechRecognition
         {
             _clip = Microphone.Start(null, false, 10, 44100);
             _isRecording = true;
+            IsGetRequest = false;
         }
 
         public static void StopRecording()
@@ -55,9 +56,11 @@ namespace VoiceChess.SpeechRecognition
             {
                 RecognizedText = ReplacementOfMistakes(response);
                 PatternAnalyzer(RecognizedText);
+                IsGetRequest = true;
             }, error =>
             {
-                RecognizedText = "Error: " + error;
+                RecognizedText = "Error" + error;
+                IsGetRequest = true;
             });
         }
 

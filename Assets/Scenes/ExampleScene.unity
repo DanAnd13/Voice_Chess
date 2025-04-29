@@ -313,6 +313,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1631946417}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5548587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -558,7 +570,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1045074008}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.105833724
+  m_Size: 0.10583372
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8510,6 +8522,18 @@ MonoBehaviour:
           m_StringArgument: Recording...
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1631946417}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &924947099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9051,7 +9075,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -13823,6 +13847,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FigureMoveManager: {fileID: 1631946418}
   WhoseTurnTitle: {fileID: 1449071655}
+  ResultOfRecordingField: {fileID: 1498618396}
+  StartRecordingButton: {fileID: 924947098}
+  StopRecordingButton: {fileID: 1697737824}
 --- !u!1001 &1492241500
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15751,11 +15778,8 @@ MonoBehaviour:
   BlackCapturedArea: {fileID: 1752873562}
   HistoryField: {fileID: 909694078}
   ResultOfRecordingField: {fileID: 1498618396}
-  StartRecordingButton: {fileID: 924947098}
-  StopRecordingButton: {fileID: 1697737824}
   RecordingWindow: {fileID: 1752126867}
   AudioPlayer: {fileID: 963194230}
-  IsVocing: 1
 --- !u!114 &1631946421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16774,6 +16798,18 @@ MonoBehaviour:
           m_StringArgument: Sending...
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1631946417}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!224 &1697737825
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16916,7 +16952,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 963194230}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &1707121566
 GameObject:
@@ -17486,7 +17534,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 242, y: -19.797}
+  m_AnchoredPosition: {x: 15, y: -19.858}
   m_SizeDelta: {x: 299.9802, y: 266.4149}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1752873561

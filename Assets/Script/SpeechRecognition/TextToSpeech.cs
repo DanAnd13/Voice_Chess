@@ -32,12 +32,6 @@ namespace VoiceChess.Speaking
 
         const int Constant_Samplerate = 22050;
 
-        private void Awake()
-        {
-            LoadModel();
-            ReadDictionary();
-        }
-
         private void OnDestroy()
         {
             _engine?.Dispose();
@@ -45,6 +39,8 @@ namespace VoiceChess.Speaking
 
         public static void SetTextAndSpeak(string text, AudioSource audioSource)
         {
+            LoadModel();
+            ReadDictionary();
             _inputText = text;
             _audioSource = audioSource;
             PlayText();
@@ -61,7 +57,7 @@ namespace VoiceChess.Speaking
             UnityEngine.Debug.Log($"Total initialization time: {stopwatch.ElapsedMilliseconds} ms");
         }
 
-        private void LoadModel()
+        private static void LoadModel()
         {
             Profiler.BeginSample("Load Sentis Model");
             var model = ModelLoader.Load(Path.Join(Application.streamingAssetsPath, "jets-text-to-speech.sentis"));
@@ -69,7 +65,7 @@ namespace VoiceChess.Speaking
             Profiler.EndSample();
         }
 
-        private void ReadDictionary()
+        private static void ReadDictionary()
         {
             if (!_hasPhonemeDictionary || _dictionary.Count > 0) return;
 
