@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using VoiceChess.MoveFigureManager;
 using VoiceChess.SpeechRecognition;
 using VoiceChess.Example.Manager;
+using UnityEditor.PackageManager;
 
 namespace VoiceChess.Example.UI
 {
@@ -14,10 +15,17 @@ namespace VoiceChess.Example.UI
     public class UIUpdate : MonoBehaviour
     {
         public FigureMoveManager FigureMoveManager;
+        public GameObject SecondaryWindow;
+        public GameObject EndGameWindow;
         public TextMeshProUGUI WhoseTurnTitle;
+        public TextMeshProUGUI HistoryField;
         public TextMeshProUGUI ResultOfRecordingField;
+        public TextMeshProUGUI WindowTitle;
+        public Button CloseWindowButton;
         public Button StartRecordingButton;
         public Button StopRecordingButton;
+        [HideInInspector]
+        public bool IsWindowOpen = false;
 
         private void Awake()
         {
@@ -32,7 +40,14 @@ namespace VoiceChess.Example.UI
 
         private void Update()
         {
-            
+            if (SpeechToText.IsGetRequest)
+            {
+                WriteRecordingResults(SpeechToText.RecognizedText);
+            }
+
+            CheckSecondaryWindow();
+
+            FinalWindow();
 
             CurrentPlayer();
 
@@ -46,9 +61,38 @@ namespace VoiceChess.Example.UI
             }
         }
 
-        public static string UpdateHistoryText(string currentValue, string newValue)
+        public void CheckSecondaryWindow()
         {
-            return newValue + "\n" + currentValue;
+            if (SecondaryWindow.activeInHierarchy)
+            {
+                IsWindowOpen = true;
+            }
+            else
+            {
+                IsWindowOpen = false;
+            }
+        }
+
+        public void UpdateHistoryText(string newValue)
+        {
+            HistoryField.text = newValue + "\n" + HistoryField.text;
+        }
+
+        public void WriteRecordingResults(string result)
+        {
+            ResultOfRecordingField.text = result;
+        }
+
+        private void FinalWindow()
+        {
+            string gameState = GameManager.MoveManager.UpdateGameState();
+            if (gameState == GameState.BlackWinner.ToString() || gameState == GameState.WhiteWinner.ToString())
+            {
+                SecondaryWindow.SetActive(true);
+                WindowTitle.text = gameState;
+                CloseWindowButton.gameObject.SetActive(false);
+                EndGameWindow.gameObject.SetActive(true);
+            }
         }
 
         private void CurrentPlayer()
@@ -65,7 +109,6 @@ namespace VoiceChess.Example.UI
                 WhoseTurnTitle.text = Player.Black.ToString();
             }
         }
-
 
     }
 }

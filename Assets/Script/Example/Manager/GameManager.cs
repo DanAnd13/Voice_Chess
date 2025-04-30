@@ -25,9 +25,7 @@ namespace VoiceChess.Example.Manager
         public Transform ParentBoard;
         public Transform WhiteCapturedArea; // Позиція для вибитих чорних фігур
         public Transform BlackCapturedArea; // Позиція для вибитих білих фігур
-        public TextMeshProUGUI HistoryField;
-        public TextMeshProUGUI ResultOfRecordingField;
-        public GameObject RecordingWindow;
+        public UIUpdate UI;
         public AudioSource AudioPlayer;
 
         [HideInInspector]
@@ -56,7 +54,7 @@ namespace VoiceChess.Example.Manager
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !UI.IsWindowOpen)
             {
                 HandleClick();
             }
@@ -211,20 +209,20 @@ namespace VoiceChess.Example.Manager
                     }
 
                     string textResult = SelectedFigure.Type.ToString() + " - " + SelectedFigure.PreviousPosition + " - " + SelectedFigure.CurrentPosition;
-                    HistoryField.text = UIUpdate.UpdateHistoryText(HistoryField.text, textResult);
+                    UI.UpdateHistoryText(textResult);
 
                     PlayAudio();
 
                     FigureMovement.MovingObject(newPosition, targetCell, SelectedFigure, () =>
                     {
-                        RecordingWindow.SetActive(false);
+                        UI.SecondaryWindow.SetActive(false);
                         CameraMovement.SwitchCameraPosition();
                         DeselectFigure();
                     });
                 }
                 else
                 {
-                    ResultOfRecordingField.text = "Move is not posible";
+                    UI.WriteRecordingResults("Move is not posible");
                     DeselectFigure();
                 }
             }
@@ -256,8 +254,6 @@ namespace VoiceChess.Example.Manager
 
         private void HandleVoiceMove(FigureMoveParams move)
         {
-            ResultOfRecordingField.text = SpeechToText.RecognizedText;
-
             BoardCellsParams targetCell = BoardCells.Find(cell =>
                                           string.Equals(cell.NameOfCell, move.NewPosition, StringComparison.OrdinalIgnoreCase));
 

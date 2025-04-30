@@ -4,6 +4,7 @@ using HuggingFace.API;
 using System.Text.RegularExpressions;
 using System.Collections;
 using System;
+using System.ComponentModel;
 
 namespace VoiceChess.SpeechRecognition
 {
@@ -55,12 +56,13 @@ namespace VoiceChess.SpeechRecognition
             HuggingFaceAPI.AutomaticSpeechRecognition(_bytes, response =>
             {
                 RecognizedText = ReplacementOfMistakes(response);
-                PatternAnalyzer(RecognizedText);
+                RecognizedText = PatternAnalyzer(RecognizedText);
                 IsGetRequest = true;
             }, error =>
             {
-                RecognizedText = "Error" + error;
+                RecognizedText = "API connection error";
                 IsGetRequest = true;
+                
             });
         }
 
@@ -162,7 +164,7 @@ namespace VoiceChess.SpeechRecognition
                 return CreateMoveParams(match, "FigureToPos");
             }
 
-            return "Unrecognized command. Try again.";
+            return "Unrecognized command.\nTry again.";
         }
 
         private static string CreateMoveParams(Match match, string patternType)
