@@ -37,27 +37,7 @@ namespace VoiceChess.Speaking
             _engine?.Dispose();
         }
 
-        public static void SetTextAndSpeak(string text, AudioSource audioSource)
-        {
-            LoadModel();
-            ReadDictionary();
-            _inputText = text;
-            _audioSource = audioSource;
-            PlayText();
-        }
-
-        private static void PlayText()
-        {
-            stopwatch.Reset();
-            stopwatch.Start();
-
-            SpeakingByText();
-
-            stopwatch.Stop();
-            UnityEngine.Debug.Log($"Total initialization time: {stopwatch.ElapsedMilliseconds} ms");
-        }
-
-        private static void LoadModel()
+        public static void LoadModel()
         {
             Profiler.BeginSample("Load Sentis Model");
             var model = ModelLoader.Load(Path.Join(Application.streamingAssetsPath, "jets-text-to-speech.sentis"));
@@ -65,7 +45,7 @@ namespace VoiceChess.Speaking
             Profiler.EndSample();
         }
 
-        private static void ReadDictionary()
+        public static void ReadDictionary()
         {
             if (!_hasPhonemeDictionary || _dictionary.Count > 0) return;
 
@@ -85,6 +65,24 @@ namespace VoiceChess.Speaking
             _dictionary.TryAdd("!", "!");
             _dictionary.TryAdd("?", "?");
             _dictionary.TryAdd("\"", "\"");
+        }
+
+        public static void SetTextAndSpeak(string text, AudioSource audioSource)
+        {
+            _inputText = text;
+            _audioSource = audioSource;
+            PlayText();
+        }
+
+        private static void PlayText()
+        {
+            stopwatch.Reset();
+            stopwatch.Start();
+
+            SpeakingByText();
+
+            stopwatch.Stop();
+            UnityEngine.Debug.Log($"Total initialization time: {stopwatch.ElapsedMilliseconds} ms");
         }
 
         private static void SpeakingByText()

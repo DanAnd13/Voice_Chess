@@ -39,6 +39,9 @@ namespace VoiceChess.Example.Manager
 
         private void Awake()
         {
+            TextToSpeech.LoadModel();
+            TextToSpeech.ReadDictionary();
+
             BoardCells.Clear();
 
             MoveManager = FigureMoveManager;
