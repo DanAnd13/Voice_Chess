@@ -31,7 +31,7 @@ namespace VoiceChess.MoveFigureManager
             return currentGameState;
         }
 
-        public bool IsMoveAvailable(string? figureName, string? currentPosition, string newPosition)
+        public bool IsMoveAvailable(string? figureName, string? currentPosition, string newPosition, string? pawnPromotion)
         {
             _moveSuccessful = false;
 
@@ -52,7 +52,7 @@ namespace VoiceChess.MoveFigureManager
 
                     if ((matchByName && matchByPosition) && figure.Status == FigureParams.TypeOfStatus.OnGame)
                     {
-                        if (CreateMoveAtributes(destinationSquare, figure, newPosition))
+                        if (CreateMoveAtributes(destinationSquare, figure, newPosition, pawnPromotion))
                         {
                             return true;
                         }
@@ -71,17 +71,45 @@ namespace VoiceChess.MoveFigureManager
             return _moveSuccessful;
         }
 
-        private bool CreateMoveAtributes(Square destinationSquare, FigureParams figure, string newPosition)
+        private bool CreateMoveAtributes(Square destinationSquare, FigureParams figure, string newPosition, string? pawnPromotion)
         {
             Square currentSquare = Square.Parse(figure.CurrentPosition);
-
-            Move move = new Move(currentSquare, destinationSquare, Board.WhoseTurn());
-
-            if (Board.IsValidMove(move))
+            PawnPromotion promotion = new PawnPromotion();
+            if (!string.IsNullOrWhiteSpace(pawnPromotion))
             {
-                MakeMove(move, figure, newPosition);
-                _moveSuccessful = true;
-                return true;
+                switch (pawnPromotion)
+                {
+                    case "Knight":
+                        promotion = PawnPromotion.Knight;
+                        break;
+                    case "Rook":
+                        promotion = PawnPromotion.Rook;
+                        break;
+                    case "Bishop":
+                        promotion = PawnPromotion.Bishop;
+                        break;
+                    case "Queen":
+                        promotion = PawnPromotion.Queen;
+                        break;
+                }
+
+                Move move = new Move(currentSquare, destinationSquare, Board.WhoseTurn(), promotion);
+                if (Board.IsValidMove(move))
+                {
+                    MakeMove(move, figure, newPosition);
+                    _moveSuccessful = true;
+                    return true;
+                }
+            }
+            else
+            {
+                Move move = new Move(currentSquare, destinationSquare, Board.WhoseTurn());
+                if (Board.IsValidMove(move))
+                {
+                    MakeMove(move, figure, newPosition);
+                    _moveSuccessful = true;
+                    return true;
+                }
             }
             return false;
         }
@@ -90,6 +118,22 @@ namespace VoiceChess.MoveFigureManager
         {
             if (Board.MakeMove(move, isMoveValidated: true))
             {
+                switch (move.PromoteTo)
+                {
+                    case PawnPromotion.Rook:
+                        figure.Type = FigureParams.TypeOfFigure.Rook;
+                        break;
+                    case PawnPromotion.Knight:
+                        figure.Type = FigureParams.TypeOfFigure.Knight;
+                        break;
+                    case PawnPromotion.Bishop:
+                        figure.Type = FigureParams.TypeOfFigure.Bishop;
+                        break;
+                    case PawnPromotion.Queen:
+                        figure.Type = FigureParams.TypeOfFigure.Queen;
+                        break;
+                }
+
                 figure.PreviousPosition = figure.CurrentPosition;
                 figure.CurrentPosition = newPosition;
             }

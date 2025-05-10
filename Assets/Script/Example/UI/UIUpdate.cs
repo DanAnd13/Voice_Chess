@@ -17,10 +17,12 @@ namespace VoiceChess.Example.UI
         public FigureMoveManager FigureMoveManager;
         public GameObject SecondaryWindow;
         public GameObject EndGameWindow;
+        public GameObject PromotionWindow;
         public TextMeshProUGUI WhoseTurnTitle;
         public TextMeshProUGUI HistoryField;
         public TextMeshProUGUI ResultOfRecordingField;
         public TextMeshProUGUI WindowTitle;
+        public TextMeshProUGUI PawnPromotionValue;
         public Button CloseWindowButton;
         public Button StartRecordingButton;
         public Button StopRecordingButton;
@@ -83,31 +85,47 @@ namespace VoiceChess.Example.UI
             ResultOfRecordingField.text = result;
         }
 
+        public void PromotionPawnWindow()
+        {
+            SecondaryWindow.SetActive(true);
+            PromotionWindow.SetActive(true);
+            CloseWindowButton.gameObject.SetActive(false);
+            WindowTitle.text = "Pawn on second-to-last field\nChoose promotion";
+        }
+
         private void FinalWindow()
         {
-            string gameState = GameManager.MoveManager.UpdateGameState();
-            if (gameState == GameState.BlackWinner.ToString() || gameState == GameState.WhiteWinner.ToString())
+            try
             {
-                SecondaryWindow.SetActive(true);
-                WindowTitle.text = gameState;
-                CloseWindowButton.gameObject.SetActive(false);
-                EndGameWindow.gameObject.SetActive(true);
+                string gameState = GameManager.MoveManager.UpdateGameState();
+                if (gameState == GameState.BlackWinner.ToString() || gameState == GameState.WhiteWinner.ToString())
+                {
+                    SecondaryWindow.SetActive(true);
+                    WindowTitle.text = gameState;
+                    CloseWindowButton.gameObject.SetActive(false);
+                    EndGameWindow.gameObject.SetActive(true);
+                }
             }
+            catch { }
         }
 
         private void CurrentPlayer()
         {
-            Player currentPlayer = FigureMoveManager.Board.WhoseTurn();
-            if (currentPlayer == Player.White)
+            try
             {
-                WhoseTurnTitle.color = Color.white;
-                WhoseTurnTitle.text = Player.White.ToString();
+                Player currentPlayer = FigureMoveManager.Board.WhoseTurn();
+                if (currentPlayer == Player.White)
+                {
+                    WhoseTurnTitle.color = Color.white;
+                    WhoseTurnTitle.text = Player.White.ToString();
+                }
+                else
+                {
+                    WhoseTurnTitle.color = Color.black;
+                    WhoseTurnTitle.text = Player.Black.ToString();
+                }
             }
-            else
-            {
-                WhoseTurnTitle.color = Color.black;
-                WhoseTurnTitle.text = Player.Black.ToString();
-            }
+            catch {}
         }
 
     }

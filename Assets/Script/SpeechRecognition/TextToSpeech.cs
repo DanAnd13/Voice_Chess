@@ -17,7 +17,6 @@ namespace VoiceChess.Speaking
         private static Worker _engine;
         private static AudioClip _clip;
         private static AudioSource _audioSource;
-        private static Stopwatch stopwatch = new Stopwatch();
 
         private static readonly string[] _phonemes = new string[]
         {
@@ -76,13 +75,7 @@ namespace VoiceChess.Speaking
 
         private static void PlayText()
         {
-            stopwatch.Reset();
-            stopwatch.Start();
-
             SpeakingByText();
-
-            stopwatch.Stop();
-            UnityEngine.Debug.Log($"Total initialization time: {stopwatch.ElapsedMilliseconds} ms");
         }
 
         private static void SpeakingByText()
@@ -91,7 +84,6 @@ namespace VoiceChess.Speaking
             if (_hasPhonemeDictionary)
             {
                 phonemeText = TextToPhonemes(_inputText);
-                UnityEngine.Debug.Log(phonemeText);
             }
             else
             {
@@ -145,8 +137,6 @@ namespace VoiceChess.Speaking
 
             var output = _engine.PeekOutput("wav") as Tensor<float>;
             var samples = output.DownloadToArray();
-
-            UnityEngine.Debug.Log($"Audio size = {samples.Length / Constant_Samplerate} seconds");
 
             _clip = AudioClip.Create("voice audio", samples.Length, 1, Constant_Samplerate, false);
             _clip.SetData(samples, 0);

@@ -15,6 +15,7 @@ using VoiceChess.Speaking;
 using System.Linq;
 using System;
 using System.Collections;
+using ChessSharp.Pieces;
 
 namespace VoiceChess.Example.Manager
 {
@@ -37,10 +38,15 @@ namespace VoiceChess.Example.Manager
         [HideInInspector]
         public static FigureParams[] Figures;
 
+        private string _pawnPromotionText = "";
+        private PawnPromotionSpawner _pawnPromotionSpawner;
+
         private void Awake()
         {
             TextToSpeech.LoadModel();
             TextToSpeech.ReadDictionary();
+
+            _pawnPromotionSpawner = GetComponent<PawnPromotionSpawner>();
 
             BoardCells.Clear();
 
@@ -61,6 +67,11 @@ namespace VoiceChess.Example.Manager
             {
                 HandleClick();
             }
+        }
+
+        public void GetPawnPromotion()
+        {
+            _pawnPromotionText = UI.PawnPromotionValue.text;
         }
 
         public static FigureParams GetFigureOnCell(BoardCellsParams cell)
@@ -106,6 +117,10 @@ namespace VoiceChess.Example.Manager
                         }
                         else
                         {
+                            if (IsPawnOnSecondToLastField(clickedFigure))
+                            {
+                                UI.PromotionPawnWindow();
+                            }
                             SelectFigure(clickedFigure);
                         }
                     }
@@ -125,6 +140,28 @@ namespace VoiceChess.Example.Manager
                     MakeFigureMove(clickedCell);
                 }
             }
+        }
+
+        private bool IsPawnOnSecondToLastField(FigureParams clickedFigure)
+        {
+            if (clickedFigure.Type != FigureParams.TypeOfFigure.Pawn)
+                return false;
+
+            try
+            {
+                Square square = Square.Parse(clickedFigure.CurrentPosition);
+                if (clickedFigure.TeamColor == FigureParams.TypeOfTeam.WhiteTeam && square.Rank == Rank.Seventh)
+                    return true;
+
+                if (clickedFigure.TeamColor == FigureParams.TypeOfTeam.BlackTeam && square.Rank == Rank.Second)
+                    return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to parse position: {clickedFigure.CurrentPosition}. Error: {ex.Message}");
+            }
+
+            return false;
         }
 
         private bool IsFigureBelongsToCurrentPlayer(FigureParams figure, Player currentPlayer)
@@ -204,7 +241,7 @@ namespace VoiceChess.Example.Manager
                     newPosition = targetCell.NameOfCell;
                 }
 
-                if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition))
+                if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition, _pawnPromotionText))
                 {
                     if (figureOnCell != null)
                     {
@@ -220,6 +257,11 @@ namespace VoiceChess.Example.Manager
                     {
                         UI.SecondaryWindow.SetActive(false);
                         CameraMovement.SwitchCameraPosition();
+                        if (!string.IsNullOrEmpty(_pawnPromotionText))
+                        {
+                            _pawnPromotionSpawner.SpawnPromotedFigure(SelectedFigure, Figures);
+                            _pawnPromotionText = "";
+                        }
                         DeselectFigure();
                     });
                 }
