@@ -343,6 +343,10 @@ namespace VoiceChess.Example.Manager
 
             if (figureToMove != null)
             {
+                if (IsPawnOnSecondToLastField(SelectedFigure))
+                {
+                    UI.PromotionPawnWindow();
+                }
                 SelectFigure(figureToMove);
                 SelectedFigure = figureToMove;
                 MakeFigureMove(targetCell);
