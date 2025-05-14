@@ -6,6 +6,8 @@ using ChessSharp.Pieces;
 using ChessSharp.SquareData;
 using System;
 using System.Linq;
+using VoiceChess.BoardCellsParameters;
+using VoiceChess.Example.FigureMoves;
 
 namespace VoiceChess.MoveFigureManager
 {
@@ -15,6 +17,10 @@ namespace VoiceChess.MoveFigureManager
 
         [HideInInspector]
         public GameBoard Board;
+        [HideInInspector]
+        public bool IsCastlingMove = false;
+        [HideInInspector]
+        public string RookTargetPosition;
 
         private bool _moveSuccessful = false;
 
@@ -136,10 +142,54 @@ namespace VoiceChess.MoveFigureManager
 
                 figure.PreviousPosition = figure.CurrentPosition;
                 figure.CurrentPosition = newPosition;
+
+                if (figure.Type == FigureParams.TypeOfFigure.King)
+                {
+                    int deltaFile = Square.Parse(newPosition).File - Square.Parse(figure.PreviousPosition).File;
+                    if (Math.Abs(deltaFile) == 2) // рокіровка - хід короля на 2 клітинки
+                    {
+                        HandleCastlingRookMove(figure, deltaFile > 0); // права рокіровка?
+                    }
+                }
             }
             else
             {
                 Debug.Log($"Failed to execute move for {figure.Type} from {figure.CurrentPosition} to {newPosition}.");
+            }
+        }
+
+        private void HandleCastlingRookMove(FigureParams king, bool isKingside)
+        {
+            string rookStart, rookEnd;
+
+            // Обираємо колір
+            bool isWhite = king.CurrentPosition.StartsWith("E") || char.IsUpper(Board.WhoseTurn().ToString()[0]);
+
+            if (isWhite)
+            {
+                rookStart = isKingside ? "H1" : "A1";
+                rookEnd = isKingside ? "F1" : "D1";
+            }
+            else
+            {
+                rookStart = isKingside ? "H8" : "A8";
+                rookEnd = isKingside ? "F8" : "D8";
+            }
+
+            // Знаходимо туру, яка має currentPosition = rookStart
+            var rookFigure = Figures.FirstOrDefault(f =>
+                f.Type == FigureParams.TypeOfFigure.Rook &&
+                f.CurrentPosition == rookStart &&
+                f.Status == FigureParams.TypeOfStatus.OnGame
+            );
+
+            if (rookFigure != null)
+            {
+                rookFigure.PreviousPosition = rookFigure.CurrentPosition;
+                rookFigure.CurrentPosition = rookEnd;
+
+                IsCastlingMove = true;
+                RookTargetPosition = rookEnd;
             }
         }
     }

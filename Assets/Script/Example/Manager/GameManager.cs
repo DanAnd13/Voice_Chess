@@ -243,6 +243,7 @@ namespace VoiceChess.Example.Manager
 
                 if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition, _pawnPromotionText))
                 {
+                    
                     if (figureOnCell != null)
                     {
                         FigureMovement.CaptureFigure(figureOnCell, BlackCapturedArea, WhiteCapturedArea);
@@ -264,6 +265,13 @@ namespace VoiceChess.Example.Manager
                         }
                         DeselectFigure();
                     });
+                    if (FigureMoveManager.IsCastlingMove)
+                    {
+                        BoardCellsParams rookCell = BoardCells.Find(cell => cell.NameOfCell == FigureMoveManager.RookTargetPosition);
+                        FigureParams rook = GetFigureOnCell(rookCell);
+                        FigureMovement.MovingObject(FigureMoveManager.RookTargetPosition, rookCell, rook, null);
+                        FigureMoveManager.IsCastlingMove = false;
+                    }
                 }
                 else
                 {
