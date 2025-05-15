@@ -51,7 +51,7 @@ namespace VoiceChess.SpeechRecognition
             SendRecording();
         }
 
-        private static void SendRecording()
+        /*private static void SendRecording()
         {
             HuggingFaceAPI.AutomaticSpeechRecognition(_bytes, response =>
             {
@@ -64,6 +64,67 @@ namespace VoiceChess.SpeechRecognition
                 IsGetRequest = true;
                 
             });
+        }*/
+        private static void SendRecording()
+        {
+            var url = "http://localhost:8000/transcribe";
+
+            var form = new WWWForm();
+            form.AddBinaryData("file", _bytes, "recording.wav", "audio/wav");
+
+            var www = UnityEngine.Networking.UnityWebRequest.Post(url, form);
+
+            // Запускаємо асинхронний запит
+            var request = www.SendWebRequest();
+
+            CoroutineRunner.Instance.StartCoroutine(WaitForRequest(request, www));
+        }
+
+        private static IEnumerator WaitForRequest(UnityEngine.Networking.UnityWebRequestAsyncOperation request, UnityEngine.Networking.UnityWebRequest www)
+        {
+            yield return request;
+
+            if (www.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+            {
+                try
+                {
+                    string responseText = www.downloadHandler.text;
+                    var json = JsonUtility.FromJson<WhisperResponse>("{\"text\":" + JsonEscape(responseText) + "}");
+                    RecognizedText = ReplacementOfMistakes(json.text);
+                    RecognizedText = PatternAnalyzer(RecognizedText);
+                }
+                catch (Exception e)
+                {
+                    RecognizedText = "Error parsing server response: " + e.Message;
+                }
+            }
+            else
+            {
+                RecognizedText = "Local server error: " + www.error;
+            }
+
+            IsGetRequest = true;
+        }
+
+        // Модель для JSON-десеріалізації
+        [Serializable]
+        private class WhisperResponse
+        {
+            public string text;
+        }
+
+        // Unity не має повноцінного JSON-парсера, тому краще так:
+        private static string JsonEscape(string rawJson)
+        {
+            // Якщо відповідь виглядає як {"text":"..."}
+            int start = rawJson.IndexOf("\"text\":");
+            if (start != -1)
+            {
+                start = rawJson.IndexOf("\"", start + 6) + 1;
+                int end = rawJson.IndexOf("\"", start);
+                return "\"" + rawJson.Substring(start, end - start) + "\"";
+            }
+            return "\"\"";
         }
 
         private static byte[] EncodeAsWAV(float[] samples, int frequency, int channels)
