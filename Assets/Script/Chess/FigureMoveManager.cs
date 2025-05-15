@@ -163,7 +163,7 @@ namespace VoiceChess.MoveFigureManager
             string rookStart, rookEnd;
 
             // Обираємо колір
-            bool isWhite = king.CurrentPosition.StartsWith("E") || char.IsUpper(Board.WhoseTurn().ToString()[0]);
+            bool isWhite = king.TeamColor == FigureParams.TypeOfTeam.WhiteTeam;
 
             if (isWhite)
             {
