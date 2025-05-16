@@ -243,7 +243,6 @@ namespace VoiceChess.Example.Manager
 
                 if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition, _pawnPromotionText))
                 {
-                    
                     if (figureOnCell != null)
                     {
                         FigureMovement.CaptureFigure(figureOnCell, BlackCapturedArea, WhiteCapturedArea);
@@ -346,12 +345,12 @@ namespace VoiceChess.Example.Manager
                     }
 
                 default:
+                    UI.WriteRecordingResults("Invalide input text");
                     break;
             }
-
             if (figureToMove != null)
             {
-                if (IsPawnOnSecondToLastField(SelectedFigure))
+                if (IsPawnOnSecondToLastField(figureToMove))
                 {
                     UI.PromotionPawnWindow();
                 }

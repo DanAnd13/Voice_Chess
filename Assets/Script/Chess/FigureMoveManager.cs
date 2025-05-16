@@ -22,8 +22,6 @@ namespace VoiceChess.MoveFigureManager
         [HideInInspector]
         public string RookTargetPosition;
 
-        private bool _moveSuccessful = false;
-
         private void Awake()
         {
             Board = new GameBoard();
@@ -39,8 +37,6 @@ namespace VoiceChess.MoveFigureManager
 
         public bool IsMoveAvailable(string? figureName, string? currentPosition, string newPosition, string? pawnPromotion)
         {
-            _moveSuccessful = false;
-
             try
             {
                 if (string.IsNullOrWhiteSpace(newPosition))
@@ -49,8 +45,6 @@ namespace VoiceChess.MoveFigureManager
                     return false;
                 }
 
-                Square destinationSquare = Square.Parse(newPosition);
-
                 foreach (var figure in Figures)
                 {
                     bool matchByName = !string.IsNullOrWhiteSpace(figureName) && figure.Type.ToString() == figureName;
@@ -58,7 +52,7 @@ namespace VoiceChess.MoveFigureManager
 
                     if ((matchByName && matchByPosition) && figure.Status == FigureParams.TypeOfStatus.OnGame)
                     {
-                        if (CreateMoveAtributes(destinationSquare, figure, newPosition, pawnPromotion))
+                        if (CreateMoveAtributes(figure, newPosition, pawnPromotion))
                         {
                             return true;
                         }
@@ -74,12 +68,13 @@ namespace VoiceChess.MoveFigureManager
                 Debug.LogError($"Unexpected error occurred: {ex.Message}");
             }
 
-            return _moveSuccessful;
+            return false;
         }
 
-        private bool CreateMoveAtributes(Square destinationSquare, FigureParams figure, string newPosition, string? pawnPromotion)
+        private bool CreateMoveAtributes(FigureParams figure, string newPosition, string? pawnPromotion)
         {
             Square currentSquare = Square.Parse(figure.CurrentPosition);
+            Square destinationSquare = Square.Parse(newPosition);
             PawnPromotion promotion = new PawnPromotion();
             if (!string.IsNullOrWhiteSpace(pawnPromotion))
             {
@@ -103,7 +98,6 @@ namespace VoiceChess.MoveFigureManager
                 if (Board.IsValidMove(move))
                 {
                     MakeMove(move, figure, newPosition);
-                    _moveSuccessful = true;
                     return true;
                 }
             }
@@ -113,7 +107,6 @@ namespace VoiceChess.MoveFigureManager
                 if (Board.IsValidMove(move))
                 {
                     MakeMove(move, figure, newPosition);
-                    _moveSuccessful = true;
                     return true;
                 }
             }

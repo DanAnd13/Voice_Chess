@@ -16021,7 +16021,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 48}
+  m_AnchoredPosition: {x: -2.59, y: 27.245}
   m_SizeDelta: {x: 105.18, y: 45.51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1498618395
@@ -18215,6 +18215,8 @@ MonoBehaviour:
   - {fileID: 72843199}
   - {fileID: 1492241503}
   - {fileID: 784079235}
+  IsCastlingMove: 0
+  RookTargetPosition: 
 --- !u!4 &1631946419
 Transform:
   m_ObjectHideFlags: 0

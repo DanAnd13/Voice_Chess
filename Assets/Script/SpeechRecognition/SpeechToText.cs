@@ -22,6 +22,12 @@ namespace VoiceChess.SpeechRecognition
         private static string _figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
         private static string _positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
 
+        // Модель для JSON-десеріалізації
+        [Serializable]
+        private class WhisperResponse
+        {
+            public string text;
+        }
         private void Update()
         {
             if (_isRecording && Microphone.GetPosition(null) >= _clip.samples)
@@ -88,14 +94,16 @@ namespace VoiceChess.SpeechRecognition
             {
                 try
                 {
-                    string responseText = www.downloadHandler.text;
-                    var json = JsonUtility.FromJson<WhisperResponse>("{\"text\":" + JsonEscape(responseText) + "}");
-                    RecognizedText = ReplacementOfMistakes(json.text);
+                    string responseText = www.downloadHandler?.text;
+                    var json = JsonUtility.FromJson<WhisperResponse>(responseText);
+
+                    RecognizedText = CleanText(json.text);
+                    RecognizedText = ReplacementOfMistakes(RecognizedText);
                     RecognizedText = PatternAnalyzer(RecognizedText);
                 }
                 catch (Exception e)
                 {
-                    RecognizedText = "Error parsing server response: " + e.Message;
+                    RecognizedText = "Exception caught: " + e.Message;
                 }
             }
             else
@@ -104,27 +112,6 @@ namespace VoiceChess.SpeechRecognition
             }
 
             IsGetRequest = true;
-        }
-
-        // Модель для JSON-десеріалізації
-        [Serializable]
-        private class WhisperResponse
-        {
-            public string text;
-        }
-
-        // Unity не має повноцінного JSON-парсера, тому краще так:
-        private static string JsonEscape(string rawJson)
-        {
-            // Якщо відповідь виглядає як {"text":"..."}
-            int start = rawJson.IndexOf("\"text\":");
-            if (start != -1)
-            {
-                start = rawJson.IndexOf("\"", start + 6) + 1;
-                int end = rawJson.IndexOf("\"", start);
-                return "\"" + rawJson.Substring(start, end - start) + "\"";
-            }
-            return "\"\"";
         }
 
         private static byte[] EncodeAsWAV(float[] samples, int frequency, int channels)
@@ -156,9 +143,23 @@ namespace VoiceChess.SpeechRecognition
             }
         }
 
+        private static string CleanText(string input)
+        {
+            return Regex.Replace(input, @"[^\w\s]", "") // видалити всі НЕ літери/цифри/пробіли
+                        .Replace("\n", " ")
+                        .Replace("\r", " ")
+                        .Replace("\t", " ")
+                        .Replace("\u00A0", " ") // нерозривний пробіл
+                        .Replace("\u200B", " ") // zero-width space
+                        .Trim();
+        }
+
         private static string ReplacementOfMistakes(string text)
         {
             return text.ToLower().Trim()
+                .Replace("see", "C")
+                .Replace("bea", "B")
+                .Replace("bee", "B")
                 .Replace("for", "four")
                 .Replace("to", "two")
                 .Replace("too", "two")
