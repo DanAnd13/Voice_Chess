@@ -17,10 +17,9 @@ namespace VoiceChess.Example.FigureMoves
 
             while (elapsed < duration)
             {
-                // Плавно переміщаємо фігуру, але зберігаємо її поточне значення Y
                 selectedFigure.transform.position = new Vector3(
                     Mathf.Lerp(startPosition.x, targetPosition.x, elapsed / duration),
-                    startPosition.y, // Завжди залишаємо Y без змін
+                    startPosition.y,
                     Mathf.Lerp(startPosition.z, targetPosition.z, elapsed / duration)
                 );
 
@@ -28,29 +27,19 @@ namespace VoiceChess.Example.FigureMoves
                 yield return null;
             }
 
-            // Після завершення анімації встановлюємо точну кінцеву позицію
             selectedFigure.transform.position = new Vector3(targetPosition.x, startPosition.y, targetPosition.z);
 
             onComplete?.Invoke();
         }
 
-
         public static void MovingObject(string newPosition, BoardCellsParams targetCell, FigureParams selectedFigure, System.Action onComplete)
         {
-            // Зберігаємо поточне значення Y фігури
             float currentY = selectedFigure.transform.position.y;
-
-            // Отримуємо нову позицію клітинки
             Vector3 newPositionInWorld = targetCell.gameObject.transform.position;
-
-            // Встановлюємо Y на збережене значення
             newPositionInWorld.y = currentY;
 
-            // Викликаємо метод для плавного переміщення
             selectedFigure.StartCoroutine(MoveObjectSmoothly(selectedFigure, newPositionInWorld, onComplete));
         }
-
-
 
         public static void CaptureFigure(FigureParams capturedFigure, Transform blackCapturedArea, Transform whiteCapturedArea)
         {
@@ -71,8 +60,6 @@ namespace VoiceChess.Example.FigureMoves
             capturedFigure.Status = FigureParams.TypeOfStatus.OffGame;
         }
 
-
-
         private static Vector3 GetNextCapturePosition(Transform captureArea, FigureParams.TypeOfTeam typeOfTeam)
         {
             int capturedCount = 0;
@@ -83,7 +70,7 @@ namespace VoiceChess.Example.FigureMoves
                     capturedCount++;
                 }
             }
-            float offset = 0.5f; // Відстань між фігурами
+            float offset = 0.5f;
 
             return captureArea.position + new Vector3(capturedCount * offset, 0, 0);
         }

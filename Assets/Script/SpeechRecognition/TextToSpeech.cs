@@ -10,7 +10,6 @@ namespace VoiceChess.Speaking
 {
     public class TextToSpeech : MonoBehaviour
     {
-        // Змінна для отримання тексту з Editor Script
         private static string _inputText = "Default text.";
         private static bool _hasPhonemeDictionary = true;
         private static Dictionary<string, string> _dictionary = new();
@@ -157,7 +156,6 @@ namespace VoiceChess.Speaking
 
         private static void Speak()
         {
-            //AudioSource audioSource = GetComponent<AudioSource>();
             if (_audioSource != null)
             {
                 _audioSource.clip = _clip;

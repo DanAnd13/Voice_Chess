@@ -42,10 +42,6 @@ namespace VoiceChess.Example.UI
 
         private void Update()
         {
-            /*if (SpeechToText.IsGetRequest)
-            {
-                WriteRecordingResults(SpeechToText.RecognizedText);
-            }*/
 
             CheckSecondaryWindow();
 

@@ -6,8 +6,6 @@ using ChessSharp.Pieces;
 using ChessSharp.SquareData;
 using System;
 using System.Linq;
-using VoiceChess.BoardCellsParameters;
-using VoiceChess.Example.FigureMoves;
 
 namespace VoiceChess.MoveFigureManager
 {
@@ -139,9 +137,9 @@ namespace VoiceChess.MoveFigureManager
                 if (figure.Type == FigureParams.TypeOfFigure.King)
                 {
                     int deltaFile = Square.Parse(newPosition).File - Square.Parse(figure.PreviousPosition).File;
-                    if (Math.Abs(deltaFile) == 2) // рокіровка - хід короля на 2 клітинки
+                    if (Math.Abs(deltaFile) == 2) // castling - king's move by 2 squares
                     {
-                        HandleCastlingRookMove(figure, deltaFile > 0); // права рокіровка?
+                        HandleCastlingRookMove(figure, deltaFile > 0);
                     }
                 }
             }
@@ -155,7 +153,6 @@ namespace VoiceChess.MoveFigureManager
         {
             string rookStart, rookEnd;
 
-            // Обираємо колір
             bool isWhite = king.TeamColor == FigureParams.TypeOfTeam.WhiteTeam;
 
             if (isWhite)
@@ -169,7 +166,6 @@ namespace VoiceChess.MoveFigureManager
                 rookEnd = isKingside ? "F8" : "D8";
             }
 
-            // Знаходимо туру, яка має currentPosition = rookStart
             var rookFigure = Figures.FirstOrDefault(f =>
                 f.Type == FigureParams.TypeOfFigure.Rook &&
                 f.CurrentPosition == rookStart &&

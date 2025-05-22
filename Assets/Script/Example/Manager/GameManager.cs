@@ -9,13 +9,11 @@ using VoiceChess.Example.UI;
 using ChessSharp;
 using ChessSharp.SquareData;
 using VoiceChess.BoardCellsParameters;
-using TMPro;
 using VoiceChess.SpeechRecognition;
 using VoiceChess.Speaking;
 using System.Linq;
 using System;
 using System.Collections;
-using ChessSharp.Pieces;
 
 namespace VoiceChess.Example.Manager
 {
@@ -24,8 +22,8 @@ namespace VoiceChess.Example.Manager
     {
         public FigureMoveManager FigureMoveManager;
         public Transform ParentBoard;
-        public Transform WhiteCapturedArea; // Позиція для вибитих чорних фігур
-        public Transform BlackCapturedArea; // Позиція для вибитих білих фігур
+        public Transform WhiteCapturedArea; 
+        public Transform BlackCapturedArea;
         public UIUpdate UI;
         public AudioSource AudioPlayer;
 
@@ -291,7 +289,6 @@ namespace VoiceChess.Example.Manager
             string moveText = $"{SelectedFigure.Type} {SelectedFigure.PreviousPosition} {SelectedFigure.CurrentPosition}";
             TextToSpeech.SetTextAndSpeak(moveText, AudioPlayer);
 
-            // Чекаємо поки закінчиться відтворення першого аудіо
             while (AudioPlayer.isPlaying)
             {
                 yield return null;
@@ -345,7 +342,7 @@ namespace VoiceChess.Example.Manager
                     }
 
                 default:
-                    UI.WriteRecordingResults("Invalide input text");
+                    UI.WriteRecordingResults("Invalide input text\nTry again");
                     break;
             }
             if (figureToMove != null)
