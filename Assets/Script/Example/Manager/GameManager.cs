@@ -27,16 +27,14 @@ namespace VoiceChess.Example.Manager
         public UIUpdate UI;
         public AudioSource AudioPlayer;
 
-        [HideInInspector]
         public static FigureMoveManager MoveManager;
-        [HideInInspector]
         public static FigureParams SelectedFigure;
-        [HideInInspector]
         public static List<BoardCellsParams> BoardCells = new List<BoardCellsParams>();
-        [HideInInspector]
         public static FigureParams[] Figures;
+        public static Action<BoardCellsParams> OnPromotionSelected;
 
         private string _pawnPromotionText = "";
+        private BoardCellsParams _targetCellForPromotion;
         private PawnPromotionSpawner _pawnPromotionSpawner;
 
         private void Awake()
@@ -57,6 +55,7 @@ namespace VoiceChess.Example.Manager
                 BoardCells.Add(cell.gameObject.GetComponent<BoardCellsParams>());
             }
             SpeechToText.OnMoveParsed += HandleVoiceMove;
+            OnPromotionSelected += MakeFigureMove;
         }
 
         private void Update()
@@ -70,6 +69,11 @@ namespace VoiceChess.Example.Manager
         public void GetPawnPromotion()
         {
             _pawnPromotionText = UI.PawnPromotionValue.text;
+        }
+
+        public void TakeFigureForPromotion()
+        {
+            OnPromotionSelected?.Invoke(_targetCellForPromotion);
         }
 
         public static FigureParams GetFigureOnCell(BoardCellsParams cell)
@@ -115,10 +119,6 @@ namespace VoiceChess.Example.Manager
                         }
                         else
                         {
-                            if (IsPawnOnSecondToLastField(clickedFigure))
-                            {
-                                UI.PromotionPawnWindow();
-                            }
                             SelectFigure(clickedFigure);
                         }
                     }
@@ -128,18 +128,30 @@ namespace VoiceChess.Example.Manager
                             clickedCell = BoardCells.Find(cell => cell.NameOfCell == attackedFigurePosition);
                             if (clickedCell != null)
                             {
-                                MakeFigureMove(clickedCell);
+                                CheckPromotionOrMakeMove(clickedFigure, clickedCell);
                             }
                     }
                 }
 
                 else if (SelectedFigure != null && BoardCells.Contains(clickedCell))
                 {
-                    MakeFigureMove(clickedCell);
+                    CheckPromotionOrMakeMove(SelectedFigure, clickedCell);
                 }
             }
         }
 
+        private void CheckPromotionOrMakeMove(FigureParams clickedFigure, BoardCellsParams clickedCell)
+        {
+            if (IsPawnOnSecondToLastField(clickedFigure))
+            {
+                _targetCellForPromotion = clickedCell;
+                UI.PromotionPawnWindow();
+            }
+            else
+            {
+                MakeFigureMove(clickedCell);
+            }
+        }
         private bool IsPawnOnSecondToLastField(FigureParams clickedFigure)
         {
             if (clickedFigure.Type != FigureParams.TypeOfFigure.Pawn)
@@ -347,13 +359,9 @@ namespace VoiceChess.Example.Manager
             }
             if (figureToMove != null)
             {
-                if (IsPawnOnSecondToLastField(figureToMove))
-                {
-                    UI.PromotionPawnWindow();
-                }
                 SelectFigure(figureToMove);
                 SelectedFigure = figureToMove;
-                MakeFigureMove(targetCell);
+                CheckPromotionOrMakeMove(figureToMove, targetCell);
             }
         }
     }

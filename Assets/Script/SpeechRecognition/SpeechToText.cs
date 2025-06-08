@@ -102,7 +102,7 @@ namespace VoiceChess.SpeechRecognition
                     RecognizedText = CleanText(json.text);
                     Debug.Log("Text: " + RecognizedText);
                     RecognizedText = ReplacementOfMistakes(RecognizedText);
-                    Debug.Log("Correction text: " + RecognizedText);
+                    Debug.Log("Correction: " + RecognizedText);
                     RecognizedText = PatternAnalyzer(RecognizedText);
                 }
                 catch (Exception e)
@@ -264,7 +264,6 @@ namespace VoiceChess.SpeechRecognition
             moveParams.TypeOfPattern = patternType;
 
             LastParsedMove = moveParams;
-            Debug.Log("PatternAnalyzer: " + moveParams.TypeOfPattern);
             OnMoveParsed?.Invoke(moveParams);
             return $"{moveParams.FigureName} {moveParams.CurrentPosition} {moveParams.NewPosition}";
         }

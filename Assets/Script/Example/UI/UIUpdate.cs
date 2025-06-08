@@ -18,6 +18,9 @@ namespace VoiceChess.Example.UI
         public GameObject SecondaryWindow;
         public GameObject EndGameWindow;
         public GameObject PromotionWindow;
+        public GameObject RecordingWindow;
+        public GameObject HelpInformationWindow;
+        public GameObject SettingsWindow;
         public TextMeshProUGUI WhoseTurnTitle;
         public TextMeshProUGUI HistoryField;
         public TextMeshProUGUI ResultOfRecordingField;
@@ -81,8 +84,19 @@ namespace VoiceChess.Example.UI
             ResultOfRecordingField.text = result;
         }
 
+        public void ClearSecondaryWindow()
+        {
+            PromotionWindow.SetActive(false);
+            RecordingWindow.SetActive(false);
+            SettingsWindow.SetActive(false);
+            HelpInformationWindow.SetActive(false);
+            EndGameWindow.SetActive(false);
+            ResultOfRecordingField.gameObject.SetActive(false);
+        }
+
         public void PromotionPawnWindow()
         {
+            ClearSecondaryWindow();
             SecondaryWindow.SetActive(true);
             PromotionWindow.SetActive(true);
             CloseWindowButton.gameObject.SetActive(false);
