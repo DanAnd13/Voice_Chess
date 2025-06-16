@@ -128,7 +128,7 @@ namespace VoiceChess.Example.Manager
                             clickedCell = BoardCells.Find(cell => cell.NameOfCell == attackedFigurePosition);
                             if (clickedCell != null)
                             {
-                                CheckPromotionOrMakeMove(clickedFigure, clickedCell);
+                                CheckPromotionOrMakeMove(SelectedFigure, clickedCell);
                             }
                     }
                 }
@@ -154,11 +154,10 @@ namespace VoiceChess.Example.Manager
         }
         private bool IsPawnOnSecondToLastField(FigureParams clickedFigure)
         {
-            if (clickedFigure.Type != FigureParams.TypeOfFigure.Pawn)
-                return false;
-
             try
             {
+                if (clickedFigure.Type != FigureParams.TypeOfFigure.Pawn)
+                return false;
                 Square square = Square.Parse(clickedFigure.CurrentPosition);
                 if (clickedFigure.TeamColor == FigureParams.TypeOfTeam.WhiteTeam && square.Rank == Rank.Seventh)
                     return true;
@@ -166,10 +165,7 @@ namespace VoiceChess.Example.Manager
                 if (clickedFigure.TeamColor == FigureParams.TypeOfTeam.BlackTeam && square.Rank == Rank.Second)
                     return true;
             }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Failed to parse position: {clickedFigure.CurrentPosition}. Error: {ex.Message}");
-            }
+            catch {}
 
             return false;
         }
@@ -189,12 +185,14 @@ namespace VoiceChess.Example.Manager
 
             List<BoardCellsParams> validMoves = GetValidMoveCells(figure);
             HighlightCells.PaintCells(validMoves, isHighlight: true);
+            UI.ShowFigureName(figure, true);
         }
 
         private void DeselectFigure()
         {
             if (SelectedFigure != null)
             {
+                UI.ShowFigureName(SelectedFigure, false);
                 SelectedFigure.transform.position -= Vector3.up * 0.5f;
                 SelectedFigure = null;
             }

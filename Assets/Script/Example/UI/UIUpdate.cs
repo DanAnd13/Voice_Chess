@@ -8,6 +8,7 @@ using VoiceChess.MoveFigureManager;
 using VoiceChess.SpeechRecognition;
 using VoiceChess.Example.Manager;
 using UnityEditor.PackageManager;
+using VoiceChess.FigureParameters;
 
 namespace VoiceChess.Example.UI
 {
@@ -117,6 +118,19 @@ namespace VoiceChess.Example.UI
                 }
             }
             catch { }
+        }
+
+        public void ShowFigureName(FigureParams figure, bool status)
+        {
+            TextMeshPro name = figure.gameObject.GetComponentInChildren<TextMeshPro>();
+            if (status == true)
+            {
+                name.text = figure.Type.ToString();
+            }
+            else
+            {
+                name.text = "";
+            }
         }
 
         private void CurrentPlayer()
