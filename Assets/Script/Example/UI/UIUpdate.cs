@@ -30,6 +30,7 @@ namespace VoiceChess.Example.UI
         public Button CloseWindowButton;
         public Button StartRecordingButton;
         public Button StopRecordingButton;
+        public Toggle ShowFigureNameToggle;
         [HideInInspector]
         public bool IsWindowOpen = false;
 
@@ -122,14 +123,17 @@ namespace VoiceChess.Example.UI
 
         public void ShowFigureName(FigureParams figure, bool status)
         {
-            TextMeshPro name = figure.gameObject.GetComponentInChildren<TextMeshPro>();
-            if (status == true)
+            if (ShowFigureNameToggle.isOn)
             {
-                name.text = figure.Type.ToString();
-            }
-            else
-            {
-                name.text = "";
+                TextMeshPro name = figure.gameObject.GetComponentInChildren<TextMeshPro>();
+                if (status == true)
+                {
+                    name.text = figure.Type.ToString();
+                }
+                else
+                {
+                    name.text = "";
+                }
             }
         }
 
