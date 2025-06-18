@@ -34,12 +34,17 @@ namespace VoiceChess.Example.Manager
         public static Action<BoardCellsParams> OnPromotionSelected;
 
         private string _pawnPromotionText = "";
+        private static bool _modelLoaded = false;
         private BoardCellsParams _targetCellForPromotion;
         private PawnPromotionSpawner _pawnPromotionSpawner;
 
         private void Awake()
         {
-            TextToSpeech.LoadModel();
+            if (!_modelLoaded)
+            {
+                TextToSpeech.LoadModel();
+                _modelLoaded = true;
+            }
             TextToSpeech.ReadDictionary();
 
             _pawnPromotionSpawner = GetComponent<PawnPromotionSpawner>();

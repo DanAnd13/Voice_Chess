@@ -10,7 +10,6 @@ namespace VoiceChess.SpeechRecognition
 {
     public class SpeechToText : MonoBehaviour
     {
-        public static FigureMoveParams? LastParsedMove { get; private set; } = null;
         public static string RecognizedText { get; private set; } = "";
         public static bool IsGetRequest = true;
         public static event Action<FigureMoveParams> OnMoveParsed;
@@ -18,9 +17,9 @@ namespace VoiceChess.SpeechRecognition
         private static AudioClip _clip;
         private static byte[] _bytes;
         private static bool _isRecording;
-        private static string _figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
-        private static string _figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
-        private static string _positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private static string _figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:2|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private static string _figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:2|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private static string _positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:2|on)?\s*([a-hA-H])\s*(\d+)\s*";
 
         // JSON model
         [Serializable]
@@ -100,9 +99,7 @@ namespace VoiceChess.SpeechRecognition
                     var json = JsonUtility.FromJson<WhisperResponse>(responseText);
 
                     RecognizedText = CleanText(json.text);
-                    Debug.Log("Text: " + RecognizedText);
                     RecognizedText = ReplacementOfMistakes(RecognizedText);
-                    Debug.Log("Correction: " + RecognizedText);
                     RecognizedText = PatternAnalyzer(RecognizedText);
                 }
                 catch (Exception e)
@@ -116,7 +113,6 @@ namespace VoiceChess.SpeechRecognition
             }
 
             IsGetRequest = true;
-            //RecognizedText = "";
         }
 
         private static byte[] EncodeAsWAV(float[] samples, int frequency, int channels)
@@ -263,7 +259,6 @@ namespace VoiceChess.SpeechRecognition
 
             moveParams.TypeOfPattern = patternType;
 
-            LastParsedMove = moveParams;
             OnMoveParsed?.Invoke(moveParams);
             return $"{moveParams.FigureName} {moveParams.CurrentPosition} {moveParams.NewPosition}";
         }

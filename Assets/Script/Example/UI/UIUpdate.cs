@@ -7,7 +7,6 @@ using UnityEngine.UI;
 using VoiceChess.MoveFigureManager;
 using VoiceChess.SpeechRecognition;
 using VoiceChess.Example.Manager;
-using UnityEditor.PackageManager;
 using VoiceChess.FigureParameters;
 
 namespace VoiceChess.Example.UI
