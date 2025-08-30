@@ -6,8 +6,6 @@ using ChessSharp.Pieces;
 using ChessSharp.SquareData;
 using System;
 using System.Linq;
-using VoiceChess.BoardCellsParameters;
-using VoiceChess.Example.FigureMoves;
 
 namespace VoiceChess.MoveFigureManager
 {
@@ -21,8 +19,6 @@ namespace VoiceChess.MoveFigureManager
         public bool IsCastlingMove = false;
         [HideInInspector]
         public string RookTargetPosition;
-
-        private bool _moveSuccessful = false;
 
         private void Awake()
         {
@@ -39,8 +35,6 @@ namespace VoiceChess.MoveFigureManager
 
         public bool IsMoveAvailable(string? figureName, string? currentPosition, string newPosition, string? pawnPromotion)
         {
-            _moveSuccessful = false;
-
             try
             {
                 if (string.IsNullOrWhiteSpace(newPosition))
@@ -49,8 +43,6 @@ namespace VoiceChess.MoveFigureManager
                     return false;
                 }
 
-                Square destinationSquare = Square.Parse(newPosition);
-
                 foreach (var figure in Figures)
                 {
                     bool matchByName = !string.IsNullOrWhiteSpace(figureName) && figure.Type.ToString() == figureName;
@@ -58,7 +50,7 @@ namespace VoiceChess.MoveFigureManager
 
                     if ((matchByName && matchByPosition) && figure.Status == FigureParams.TypeOfStatus.OnGame)
                     {
-                        if (CreateMoveAtributes(destinationSquare, figure, newPosition, pawnPromotion))
+                        if (CreateMoveAtributes(figure, newPosition, pawnPromotion))
                         {
                             return true;
                         }
@@ -74,12 +66,13 @@ namespace VoiceChess.MoveFigureManager
                 Debug.LogError($"Unexpected error occurred: {ex.Message}");
             }
 
-            return _moveSuccessful;
+            return false;
         }
 
-        private bool CreateMoveAtributes(Square destinationSquare, FigureParams figure, string newPosition, string? pawnPromotion)
+        private bool CreateMoveAtributes(FigureParams figure, string newPosition, string? pawnPromotion)
         {
             Square currentSquare = Square.Parse(figure.CurrentPosition);
+            Square destinationSquare = Square.Parse(newPosition);
             PawnPromotion promotion = new PawnPromotion();
             if (!string.IsNullOrWhiteSpace(pawnPromotion))
             {
@@ -103,7 +96,6 @@ namespace VoiceChess.MoveFigureManager
                 if (Board.IsValidMove(move))
                 {
                     MakeMove(move, figure, newPosition);
-                    _moveSuccessful = true;
                     return true;
                 }
             }
@@ -113,7 +105,6 @@ namespace VoiceChess.MoveFigureManager
                 if (Board.IsValidMove(move))
                 {
                     MakeMove(move, figure, newPosition);
-                    _moveSuccessful = true;
                     return true;
                 }
             }
@@ -146,9 +137,9 @@ namespace VoiceChess.MoveFigureManager
                 if (figure.Type == FigureParams.TypeOfFigure.King)
                 {
                     int deltaFile = Square.Parse(newPosition).File - Square.Parse(figure.PreviousPosition).File;
-                    if (Math.Abs(deltaFile) == 2) // рокіровка - хід короля на 2 клітинки
+                    if (Math.Abs(deltaFile) == 2) // castling - king's move by 2 squares
                     {
-                        HandleCastlingRookMove(figure, deltaFile > 0); // права рокіровка?
+                        HandleCastlingRookMove(figure, deltaFile > 0);
                     }
                 }
             }
@@ -162,7 +153,6 @@ namespace VoiceChess.MoveFigureManager
         {
             string rookStart, rookEnd;
 
-            // Обираємо колір
             bool isWhite = king.TeamColor == FigureParams.TypeOfTeam.WhiteTeam;
 
             if (isWhite)
@@ -176,7 +166,6 @@ namespace VoiceChess.MoveFigureManager
                 rookEnd = isKingside ? "F8" : "D8";
             }
 
-            // Знаходимо туру, яка має currentPosition = rookStart
             var rookFigure = Figures.FirstOrDefault(f =>
                 f.Type == FigureParams.TypeOfFigure.Rook &&
                 f.CurrentPosition == rookStart &&

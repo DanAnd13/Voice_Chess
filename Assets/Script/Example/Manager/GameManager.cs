@@ -9,13 +9,11 @@ using VoiceChess.Example.UI;
 using ChessSharp;
 using ChessSharp.SquareData;
 using VoiceChess.BoardCellsParameters;
-using TMPro;
 using VoiceChess.SpeechRecognition;
 using VoiceChess.Speaking;
 using System.Linq;
 using System;
 using System.Collections;
-using ChessSharp.Pieces;
 
 namespace VoiceChess.Example.Manager
 {
@@ -24,26 +22,29 @@ namespace VoiceChess.Example.Manager
     {
         public FigureMoveManager FigureMoveManager;
         public Transform ParentBoard;
-        public Transform WhiteCapturedArea; // Позиція для вибитих чорних фігур
-        public Transform BlackCapturedArea; // Позиція для вибитих білих фігур
+        public Transform WhiteCapturedArea; 
+        public Transform BlackCapturedArea;
         public UIUpdate UI;
         public AudioSource AudioPlayer;
 
-        [HideInInspector]
         public static FigureMoveManager MoveManager;
-        [HideInInspector]
         public static FigureParams SelectedFigure;
-        [HideInInspector]
         public static List<BoardCellsParams> BoardCells = new List<BoardCellsParams>();
-        [HideInInspector]
         public static FigureParams[] Figures;
+        public static Action<BoardCellsParams> OnPromotionSelected;
 
         private string _pawnPromotionText = "";
+        private static bool _modelLoaded = false;
+        private BoardCellsParams _targetCellForPromotion;
         private PawnPromotionSpawner _pawnPromotionSpawner;
 
         private void Awake()
         {
-            TextToSpeech.LoadModel();
+            if (!_modelLoaded)
+            {
+                TextToSpeech.LoadModel();
+                _modelLoaded = true;
+            }
             TextToSpeech.ReadDictionary();
 
             _pawnPromotionSpawner = GetComponent<PawnPromotionSpawner>();
@@ -59,6 +60,7 @@ namespace VoiceChess.Example.Manager
                 BoardCells.Add(cell.gameObject.GetComponent<BoardCellsParams>());
             }
             SpeechToText.OnMoveParsed += HandleVoiceMove;
+            OnPromotionSelected += MakeFigureMove;
         }
 
         private void Update()
@@ -72,6 +74,11 @@ namespace VoiceChess.Example.Manager
         public void GetPawnPromotion()
         {
             _pawnPromotionText = UI.PawnPromotionValue.text;
+        }
+
+        public void TakeFigureForPromotion()
+        {
+            OnPromotionSelected?.Invoke(_targetCellForPromotion);
         }
 
         public static FigureParams GetFigureOnCell(BoardCellsParams cell)
@@ -117,10 +124,6 @@ namespace VoiceChess.Example.Manager
                         }
                         else
                         {
-                            if (IsPawnOnSecondToLastField(clickedFigure))
-                            {
-                                UI.PromotionPawnWindow();
-                            }
                             SelectFigure(clickedFigure);
                         }
                     }
@@ -130,25 +133,36 @@ namespace VoiceChess.Example.Manager
                             clickedCell = BoardCells.Find(cell => cell.NameOfCell == attackedFigurePosition);
                             if (clickedCell != null)
                             {
-                                MakeFigureMove(clickedCell);
+                                CheckPromotionOrMakeMove(SelectedFigure, clickedCell);
                             }
                     }
                 }
 
                 else if (SelectedFigure != null && BoardCells.Contains(clickedCell))
                 {
-                    MakeFigureMove(clickedCell);
+                    CheckPromotionOrMakeMove(SelectedFigure, clickedCell);
                 }
             }
         }
 
+        private void CheckPromotionOrMakeMove(FigureParams clickedFigure, BoardCellsParams clickedCell)
+        {
+            if (IsPawnOnSecondToLastField(clickedFigure))
+            {
+                _targetCellForPromotion = clickedCell;
+                UI.PromotionPawnWindow();
+            }
+            else
+            {
+                MakeFigureMove(clickedCell);
+            }
+        }
         private bool IsPawnOnSecondToLastField(FigureParams clickedFigure)
         {
-            if (clickedFigure.Type != FigureParams.TypeOfFigure.Pawn)
-                return false;
-
             try
             {
+                if (clickedFigure.Type != FigureParams.TypeOfFigure.Pawn)
+                return false;
                 Square square = Square.Parse(clickedFigure.CurrentPosition);
                 if (clickedFigure.TeamColor == FigureParams.TypeOfTeam.WhiteTeam && square.Rank == Rank.Seventh)
                     return true;
@@ -156,10 +170,7 @@ namespace VoiceChess.Example.Manager
                 if (clickedFigure.TeamColor == FigureParams.TypeOfTeam.BlackTeam && square.Rank == Rank.Second)
                     return true;
             }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Failed to parse position: {clickedFigure.CurrentPosition}. Error: {ex.Message}");
-            }
+            catch {}
 
             return false;
         }
@@ -179,12 +190,14 @@ namespace VoiceChess.Example.Manager
 
             List<BoardCellsParams> validMoves = GetValidMoveCells(figure);
             HighlightCells.PaintCells(validMoves, isHighlight: true);
+            UI.ShowFigureName(figure, true);
         }
 
         private void DeselectFigure()
         {
             if (SelectedFigure != null)
             {
+                UI.ShowFigureName(SelectedFigure, false);
                 SelectedFigure.transform.position -= Vector3.up * 0.5f;
                 SelectedFigure = null;
             }
@@ -243,7 +256,6 @@ namespace VoiceChess.Example.Manager
 
                 if (FigureMoveManager.IsMoveAvailable(SelectedFigure.Type.ToString(), SelectedFigure.CurrentPosition, newPosition, _pawnPromotionText))
                 {
-                    
                     if (figureOnCell != null)
                     {
                         FigureMovement.CaptureFigure(figureOnCell, BlackCapturedArea, WhiteCapturedArea);
@@ -292,7 +304,6 @@ namespace VoiceChess.Example.Manager
             string moveText = $"{SelectedFigure.Type} {SelectedFigure.PreviousPosition} {SelectedFigure.CurrentPosition}";
             TextToSpeech.SetTextAndSpeak(moveText, AudioPlayer);
 
-            // Чекаємо поки закінчиться відтворення першого аудіо
             while (AudioPlayer.isPlaying)
             {
                 yield return null;
@@ -346,18 +357,14 @@ namespace VoiceChess.Example.Manager
                     }
 
                 default:
+                    UI.WriteRecordingResults("Invalide input text\nTry again");
                     break;
             }
-
             if (figureToMove != null)
             {
-                if (IsPawnOnSecondToLastField(SelectedFigure))
-                {
-                    UI.PromotionPawnWindow();
-                }
                 SelectFigure(figureToMove);
                 SelectedFigure = figureToMove;
-                MakeFigureMove(targetCell);
+                CheckPromotionOrMakeMove(figureToMove, targetCell);
             }
         }
     }

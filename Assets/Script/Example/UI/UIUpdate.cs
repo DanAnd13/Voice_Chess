@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using VoiceChess.MoveFigureManager;
 using VoiceChess.SpeechRecognition;
 using VoiceChess.Example.Manager;
-using UnityEditor.PackageManager;
+using VoiceChess.FigureParameters;
 
 namespace VoiceChess.Example.UI
 {
@@ -18,6 +18,9 @@ namespace VoiceChess.Example.UI
         public GameObject SecondaryWindow;
         public GameObject EndGameWindow;
         public GameObject PromotionWindow;
+        public GameObject RecordingWindow;
+        public GameObject HelpInformationWindow;
+        public GameObject SettingsWindow;
         public TextMeshProUGUI WhoseTurnTitle;
         public TextMeshProUGUI HistoryField;
         public TextMeshProUGUI ResultOfRecordingField;
@@ -26,6 +29,7 @@ namespace VoiceChess.Example.UI
         public Button CloseWindowButton;
         public Button StartRecordingButton;
         public Button StopRecordingButton;
+        public Toggle ShowFigureNameToggle;
         [HideInInspector]
         public bool IsWindowOpen = false;
 
@@ -42,10 +46,6 @@ namespace VoiceChess.Example.UI
 
         private void Update()
         {
-            if (SpeechToText.IsGetRequest)
-            {
-                WriteRecordingResults(SpeechToText.RecognizedText);
-            }
 
             CheckSecondaryWindow();
 
@@ -85,8 +85,19 @@ namespace VoiceChess.Example.UI
             ResultOfRecordingField.text = result;
         }
 
+        public void ClearSecondaryWindow()
+        {
+            PromotionWindow.SetActive(false);
+            RecordingWindow.SetActive(false);
+            SettingsWindow.SetActive(false);
+            HelpInformationWindow.SetActive(false);
+            EndGameWindow.SetActive(false);
+            ResultOfRecordingField.gameObject.SetActive(false);
+        }
+
         public void PromotionPawnWindow()
         {
+            ClearSecondaryWindow();
             SecondaryWindow.SetActive(true);
             PromotionWindow.SetActive(true);
             CloseWindowButton.gameObject.SetActive(false);
@@ -107,6 +118,22 @@ namespace VoiceChess.Example.UI
                 }
             }
             catch { }
+        }
+
+        public void ShowFigureName(FigureParams figure, bool status)
+        {
+            if (ShowFigureNameToggle.isOn)
+            {
+                TextMeshPro name = figure.gameObject.GetComponentInChildren<TextMeshPro>();
+                if (status == true)
+                {
+                    name.text = figure.Type.ToString();
+                }
+                else
+                {
+                    name.text = "";
+                }
+            }
         }
 
         private void CurrentPlayer()

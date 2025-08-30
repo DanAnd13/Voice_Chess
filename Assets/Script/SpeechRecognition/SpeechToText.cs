@@ -10,18 +10,23 @@ namespace VoiceChess.SpeechRecognition
 {
     public class SpeechToText : MonoBehaviour
     {
-        public static FigureMoveParams? LastParsedMove { get; private set; } = null;
-        public static string RecognizedText { get; private set; } = ""; // 🔹 Додаємо змінну для тексту
+        public static string RecognizedText { get; private set; } = "";
         public static bool IsGetRequest = true;
         public static event Action<FigureMoveParams> OnMoveParsed;
 
         private static AudioClip _clip;
         private static byte[] _bytes;
         private static bool _isRecording;
-        private static string _figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
-        private static string _figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
-        private static string _positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:to|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private static string _figurePositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:2|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private static string _figurePositionPositionPattern = @"\s*(pawn|knight|bishop|rook|queen|king)\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:2|on)?\s*([a-hA-H])\s*(\d+)\s*";
+        private static string _positionPositionPattern = @"\s*(?:from)?\s*([a-hA-H])\s*(\d+)\s*(?:2|on)?\s*([a-hA-H])\s*(\d+)\s*";
 
+        // JSON model
+        [Serializable]
+        private class WhisperResponse
+        {
+            public string text;
+        }
         private void Update()
         {
             if (_isRecording && Microphone.GetPosition(null) >= _clip.samples)
@@ -51,19 +56,63 @@ namespace VoiceChess.SpeechRecognition
             SendRecording();
         }
 
+        //for an external Hugging Face API
+        //private static void SendRecording()
+        //{
+        //    HuggingFaceAPI.AutomaticSpeechRecognition(_bytes, response =>
+        //    {
+        //        RecognizedText = ReplacementOfMistakes(response);
+        //        RecognizedText = PatternAnalyzer(RecognizedText);
+        //        IsGetRequest = true;
+        //    }, error =>
+        //    {
+        //        RecognizedText = "API connection error";
+        //        IsGetRequest = true;
+
+        //    });
+        //}
+
+        // for local API
         private static void SendRecording()
         {
-            HuggingFaceAPI.AutomaticSpeechRecognition(_bytes, response =>
+            var url = "http://localhost:8000/transcribe";
+
+            var form = new WWWForm();
+            form.AddBinaryData("file", _bytes, "recording.wav", "audio/wav");
+
+            var www = UnityEngine.Networking.UnityWebRequest.Post(url, form);
+
+            var request = www.SendWebRequest();
+
+            CoroutineRunner.Instance.StartCoroutine(WaitForRequest(request, www));
+        }
+
+        private static IEnumerator WaitForRequest(UnityEngine.Networking.UnityWebRequestAsyncOperation request, UnityEngine.Networking.UnityWebRequest www)
+        {
+            yield return request;
+
+            if (www.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
             {
-                RecognizedText = ReplacementOfMistakes(response);
-                RecognizedText = PatternAnalyzer(RecognizedText);
-                IsGetRequest = true;
-            }, error =>
+                try
+                {
+                    string responseText = www.downloadHandler?.text;
+                    var json = JsonUtility.FromJson<WhisperResponse>(responseText);
+
+                    RecognizedText = CleanText(json.text);
+                    RecognizedText = ReplacementOfMistakes(RecognizedText);
+                    RecognizedText = PatternAnalyzer(RecognizedText);
+                }
+                catch (Exception e)
+                {
+                    RecognizedText = "Exception caught: " + e.Message;
+                }
+            }
+            else
             {
-                RecognizedText = "API connection error";
-                IsGetRequest = true;
-                
-            });
+                RecognizedText = "Local server error: " + www.error;
+            }
+
+            IsGetRequest = true;
         }
 
         private static byte[] EncodeAsWAV(float[] samples, int frequency, int channels)
@@ -95,9 +144,23 @@ namespace VoiceChess.SpeechRecognition
             }
         }
 
+        private static string CleanText(string input)
+        {
+            return Regex.Replace(input, @"[^\w\s]", "")
+                        .Replace("\n", " ")
+                        .Replace("\r", " ")
+                        .Replace("\t", " ")
+                        .Replace("\u00A0", " ")
+                        .Replace("\u200B", " ")
+                        .Trim();
+        }
+
         private static string ReplacementOfMistakes(string text)
         {
             return text.ToLower().Trim()
+                .Replace("see", "C")
+                .Replace("bea", "B")
+                .Replace("bee", "B")
                 .Replace("for", "four")
                 .Replace("to", "two")
                 .Replace("too", "two")
@@ -117,11 +180,11 @@ namespace VoiceChess.SpeechRecognition
                 .Replace("eight", "8")
                 .Replace("ate", "8")
                 .Replace("nine", "9")
-                .Replace("bawn", "pawn")
-                .Replace("bown", "pawn")
-                .Replace("boun", "pawn")
-                .Replace("pawnd", "pawn")
-                .Replace("powng", "pawn")
+                .Replace("pom", "pawn")
+                .Replace("pon", "pawn")
+                .Replace("pan", "pawn")
+                .Replace("pam", "pawn")
+                .Replace("pond", "pawn")
                 .Replace("pound", "pawn")
                 .Replace("night", "knight")
                 .Replace("nite", "knight")
@@ -135,6 +198,8 @@ namespace VoiceChess.SpeechRecognition
                 .Replace("in", "king")
                 .Replace("himg", "king")
                 .Replace("kink", "king")
+                .Replace("King", "king")
+                .Replace("pink", "king")
                 .Replace("game", "king")
                 .Replace("kim", "king")
                 .Replace("thing", "king")
@@ -164,7 +229,7 @@ namespace VoiceChess.SpeechRecognition
                 return CreateMoveParams(match, "FigureToPos");
             }
 
-            return "Unrecognized command.\nTry again.";
+            return CreateMoveParams(match, null);
         }
 
         private static string CreateMoveParams(Match match, string patternType)
@@ -187,15 +252,14 @@ namespace VoiceChess.SpeechRecognition
 
                 case "FigureToPos":
                     moveParams.FigureName = match.Groups[1].Value;
-                    moveParams.CurrentPosition = ""; // немає
+                    moveParams.CurrentPosition = "";
                     moveParams.NewPosition = $"{match.Groups[2].Value}{match.Groups[3].Value}";
                     break;
             }
 
             moveParams.TypeOfPattern = patternType;
 
-            LastParsedMove = moveParams;
-            OnMoveParsed?.Invoke(moveParams); // 🔸 Виклик події
+            OnMoveParsed?.Invoke(moveParams);
             return $"{moveParams.FigureName} {moveParams.CurrentPosition} {moveParams.NewPosition}";
         }
     }

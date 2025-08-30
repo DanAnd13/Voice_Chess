@@ -2,15 +2,12 @@ using UnityEngine;
 using Unity.Sentis;
 using System.IO;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine.Profiling;
-using TMPro.EditorUtilities;
 
 namespace VoiceChess.Speaking
 {
     public class TextToSpeech : MonoBehaviour
     {
-        // Змінна для отримання тексту з Editor Script
         private static string _inputText = "Default text.";
         private static bool _hasPhonemeDictionary = true;
         private static Dictionary<string, string> _dictionary = new();
@@ -70,11 +67,6 @@ namespace VoiceChess.Speaking
         {
             _inputText = text;
             _audioSource = audioSource;
-            PlayText();
-        }
-
-        private static void PlayText()
-        {
             SpeakingByText();
         }
 
@@ -87,7 +79,7 @@ namespace VoiceChess.Speaking
             }
             else
             {
-                UnityEngine.Debug.Log("Have no phoneme dictionary");
+                Debug.Log("Have no phoneme dictionary");
                 phonemeText = null;
             }
             DoInference(phonemeText);
@@ -157,7 +149,6 @@ namespace VoiceChess.Speaking
 
         private static void Speak()
         {
-            //AudioSource audioSource = GetComponent<AudioSource>();
             if (_audioSource != null)
             {
                 _audioSource.clip = _clip;
@@ -165,7 +156,7 @@ namespace VoiceChess.Speaking
             }
             else
             {
-                UnityEngine.Debug.Log("There is no audio source");
+                Debug.Log("There is no audio source");
             }
         }
 

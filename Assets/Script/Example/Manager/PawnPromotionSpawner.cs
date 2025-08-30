@@ -65,23 +65,19 @@ public class PawnPromotionSpawner : MonoBehaviour
         Quaternion rotation = oldPawn.transform.rotation;
         Transform parent = oldPawn.transform.parent;
 
-        // Створюємо без parent, потім додаємо вручну
         GameObject newFigureObj = Instantiate(prefabToSpawn);
-        newFigureObj.transform.SetParent(parent, worldPositionStays: false); // <-- важливо
+        newFigureObj.transform.SetParent(parent, worldPositionStays: false);
 
-        // Встановлюємо локальну позицію, як у решти фігур
         newFigureObj.transform.localPosition = localPosition;
         newFigureObj.transform.localRotation = rotation;
         FigureParams newFigure = newFigureObj.GetComponent<FigureParams>();
 
-        // Копіюємо дані зі старої фігури
         newFigure.CurrentPosition = oldPawn.CurrentPosition;
         newFigure.PreviousPosition = oldPawn.PreviousPosition;
         newFigure.Type = oldPawn.Type;
         newFigure.TeamColor = oldPawn.TeamColor;
         newFigure.Status = oldPawn.Status;
 
-        // Вимикаємо стару фігуру
         WriteFigureInFiguresArray(Figures, oldPawn, newFigure);
         oldPawn.gameObject.SetActive(false);
     }
